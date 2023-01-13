@@ -1,0 +1,91 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>18</zoom_level><help_text>Space for diagram noteset</help_text><element><id>UMLClass</id><coordinates><x>180</x><y>936</y><w>432</w><h>450</h></coordinates><panel_attributes>Station
+--
+-id: int
+-name: string
+-location: string
+--
++Station(name: string, location: string)
++getID(): int
++getName(): string
++getLocation(): string
+
++setName(name: string): void
++setLocation(location: string): void
++saveStation(): void
++deleteStation(): void
+_+getStation(id: int): Station_
+_+getStation(): Station[]_</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>1476</y><w>432</w><h>342</h></coordinates><panel_attributes>Train
+--
+-id: int
+-seatsCount: int
+--
++Train(seats: int)
++getSeatsCount(): int
++setSeatsCount(count: int): void
++saveTrain(): void
++deleteTrain(): void
+_+getTrain(id: int): Train_
+_+getTrain(): Train[]_
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>882</x><y>1476</y><w>432</w><h>342</h></coordinates><panel_attributes>Trip
+--
+-id: int
+-price: float
+-date: DateTime
+-from: Station
+-to: Station
+-train: Train
+-bookedSeats: int
+--
++Trip()
++hasEmptySeat(): boolean
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>594</x><y>1476</y><w>324</w><h>54</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;160;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>702</x><y>1044</y><w>432</w><h>216</h></coordinates><panel_attributes>Ticket
+--
+-id: int
+-passenger: Passenger
+-payment: Payment
+-trip: Trip
+--
++bookTicket(): void
++cancelTicket():void
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>396</x><y>486</y><w>432</w><h>144</h></coordinates><panel_attributes>Passenger
+--
+-tickets: Ticket[0..*]
+--
++getTickets():Ticket[]
++setTickets(ticket:Ticket[])
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>864</x><y>720</y><w>432</w><h>216</h></coordinates><panel_attributes>Payment
+--
+-ID: int
+-cardNumber: int
+--
++getID(): int
++getCardNumber():int
++payTicket(ticket:Ticket):void
++cancelPayment(ticket:Ticket):void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>378</x><y>1368</y><w>54</w><h>144</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>576</x><y>612</y><w>342</w><h>468</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;170;240</additional_attributes></element><element><id>Relation</id><coordinates><x>900</x><y>918</y><w>216</w><h>162</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>648</y><w>432</w><h>144</h></coordinates><panel_attributes>Admin
+--
+createTrain():void
+createStation():void
+createTrip():void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>0</y><w>432</w><h>414</h></coordinates><panel_attributes>/User/
+--
+-SSN: int
+-username: string
+-auth: bool
+-password: string
+--
++getSSN(): int
++getUsername(): string
++getAuth(): bool
++getPassword():string
+
++setSSN(): int
++setUsername(newUsername: string): void
++setAuth(newAuth: bool): void
++setPassword():string
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>396</y><w>306</w><h>288</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>150;10;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>468</x><y>396</y><w>180</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;50</additional_attributes></element><element><id>Relation</id><coordinates><x>900</x><y>1242</y><w>234</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;130;10;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>630</x><y>1998</y><w>252</w><h>72</h></coordinates><panel_attributes>Check database for 
+available seats
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>738</x><y>1710</y><w>180</w><h>324</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;160;10;10;80;10</additional_attributes></element></diagram>
