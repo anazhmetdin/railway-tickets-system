@@ -1,28 +1,30 @@
 <diagram program="umletino" version="15.0.0"><zoom_level>11</zoom_level><help_text>Space for diagram note</help_text><element><id>UMLClass</id><coordinates><x>748</x><y>715</y><w>264</w><h>187</h></coordinates><panel_attributes>*Station*
 --
--name: string
--location: string
+#name: string
+#location: string
 --
 #Station(name: string, location: string)
 
 +getName(): string
 +getLocation(): string
 
-+setName(name: string): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>726</x><y>1089</y><w>264</w><h>110</h></coordinates><panel_attributes>*Train*
++setName(name: string): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>726</x><y>1089</y><w>264</w><h>154</h></coordinates><panel_attributes>*Train*
 --
--seatsCount: int
+#ID: int
+#seatsCount: int
 --
 #Train(seats: int)
 
++getID(): int
 +getSeatsCount(): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1144</x><y>1089</y><w>264</w><h>374</h></coordinates><panel_attributes>*Trip*
 --
--ID: int
--price: float
--date: DateTime
--from: Station
--to: Station
--train: Train
--tickets: Ticket[*]
+#ID: int
+#price: float
+#date: DateTime
+#from: Station
+#to: Station
+#train: Train
+#tickets: Ticket[*]
 --
 #Trip(ID: int, price: int, date: DateTime,
            from: Station, to: Station,
