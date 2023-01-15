@@ -13,9 +13,9 @@ namespace system
         public DateTime BookingDate { get; }
 
 
-        public Ticket(int ID, Trip trip)
+        public Ticket(int id, Trip trip)
         {
-            this.id = ID;
+            this.id = id;
             this.trip = trip;
         }
 
@@ -25,8 +25,7 @@ namespace system
             {
                 trip.addTicket(this);
                 return true;
-            }
-            else
+            }else
                 return false;
         }
 
