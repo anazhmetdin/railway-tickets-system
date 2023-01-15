@@ -1,39 +1,35 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-interface TicketUser
+namespace system
 {
-	List<Ticket> getTicket();
-	Ticket getTicket(int id);
-	bool addTicket(Ticket ticket);
+    internal class Employee : User, TicketOwner
+    {
+        public int salary { get; set; }
+        List<OfflineTicket> tickets;
 
+
+        protected Employee(int salary, int SSN, string username, string password, bool auth) : base(SSN, username, password, auth)
+        {
+            this.salary = salary;
+        }
+
+        public List<Ticket> getTicket()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Ticket getTicket(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool addTicket(Ticket ticket)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
-
-public class Employee : TicketUser
-{
-	private int salary;
-	private OfflineTicket tickets ;
-
-
-	private Employee(int salary,string SSN, string username, bool auth, string password)
-    {
-
-    }
-
-    public int Salary { get; set; }
-    
-	public getTicket()
-    {
-
-    }
-	public getTicket(int id) 
-	{
-	}
-	public addTicket(Ticket t)
-    {
-
-    }
-
-}
-
-
-
