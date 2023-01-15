@@ -1,25 +1,34 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Ticket
+namespace system
 {
-	private string id;
-	private Trip trip;
-	private DateTime bookingDate;
-
-	public Ticket(Trip trip, string id)
-	{
-
-	}
-	public bool bookTicket() 
-	{
-	}
-	public User getOwner()
+    abstract class Ticket
     {
+        public int id { get; }
+        public Trip trip { get; }
+        public DateTime BookingDate { get; }
 
+
+        public Ticket(int id, Trip trip)
+        {
+            this.id = id;
+            this.trip = trip;
+        }
+
+        public bool bookTicket()
+        {
+            if (trip.hasEmptySeats())
+            {
+                trip.addTicket(this);
+                return true;
+            }else
+                return false;
+        }
+
+        public abstract User getOwner();
     }
-	public string getId()
-    {
-		return id;
-    }
-    public Trip trip { get; set; }
 }
