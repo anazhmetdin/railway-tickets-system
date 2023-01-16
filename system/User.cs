@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    internal abstract class User
+    public abstract class User
     {
         public int SSN { get; }
         public string username { get; set; }
@@ -21,14 +21,6 @@ namespace system
             this.auth = auth;
         }
 
-        public bool login(string username, string password) 
-        {
-            /*
-                        if ( username) { return true; }
-                        if() { return false; }
-                        return auth; */
-            return true;
-        }
-
+        public abstract bool login(string username, string password);
     }
 }

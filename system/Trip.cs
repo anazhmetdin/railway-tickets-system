@@ -8,7 +8,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace system
 {
-    internal class Trip : TicketOwner
+    public class Trip : TicketOwner
     {
         public int id { get; }
         public double price { get; protected set; }
@@ -27,21 +27,22 @@ namespace system
             this.to = to;
             this.train = train;
         }
-        public bool hasEmptySeats() { return (train.getSeatCount() > tickets.Count); }
+        public bool hasEmptySeats() { return (train.seatsCount > tickets.Count); }
 
-        List<Ticket> TicketOwner.getTicket()
+        public List<Ticket> getTicket()
         {
             throw new NotImplementedException();
         }
 
-        Ticket TicketOwner.getTicket(int id)
+        public Ticket getTicket(int id)
         {
             throw new NotImplementedException();
         }
 
-        bool TicketOwner.addTicket(Ticket ticket)
+        public bool addTicket(Ticket ticket)
         {
             throw new NotImplementedException();
         }
+
     }
 }

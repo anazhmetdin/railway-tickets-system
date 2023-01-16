@@ -2,7 +2,11 @@
 
 internal class Program
 {
-    private static Dictionary<string, string> menues = new()
+
+     
+    
+
+/*    private static Dictionary<string, string> menues = new()
     {
         {"main",
             "1- login\n"+
@@ -31,25 +35,38 @@ internal class Program
         }
 
         return option;
-    }
+    }*/
 
     private static void Main(string[] args)
     {
-        int userOption = -1;
+        /*List<string> karim = new List<string>();
+        karim.Add("help");
+        karim.Add("jedl");
 
-        while (userOption != 0)
-        {
-            PrintMenu("main");
+        bool v = karim.Any("help");
+*/
+        List<int> numbers = new List<int> { 1, 2 };
+        bool hasElements = numbers.Any();
 
-            userOption = GetUserOption(0, 2);
+        Console.WriteLine("The list {0} empty.", hasElements ? "is not" : "is");
 
-            Console.WriteLine(userOption);
+  
+        /*        int userOption = -1;
 
-            if (userOption == 1)
-            {
-                PrintMenu("login");
-                Console.Read();
-            }
-        }
+                while (userOption != 0)
+                {
+                    PrintMenu("main");
+
+                    userOption = GetUserOption(0, 2);
+
+                    Console.WriteLine(userOption);
+
+                    if (userOption == 1)
+                    {
+                        PrintMenu("login");
+                        Console.Read();
+                    }
+                }
+        */
     }
 }

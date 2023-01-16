@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace system
 {
-    abstract class Ticket
+    public abstract class Ticket 
     {
         public int id { get; }
         public Trip trip { get; }
@@ -19,15 +20,10 @@ namespace system
             this.trip = trip;
         }
 
-        public bool bookTicket()
-        {
-            if (trip.hasEmptySeats())
-            {
-                trip.addTicket(this);
-                return true;
-            }else
-                return false;
-        }
+
+
+        public abstract bool bookTicket();
+
 
         public abstract User getOwner();
     }
