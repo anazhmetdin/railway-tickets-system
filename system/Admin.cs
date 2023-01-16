@@ -12,8 +12,8 @@ namespace system
 
 
         static List<Train> trains = new List<Train>();
-        static List<Station> staions = new List<Staion>();
-        static List<OlinePassenger> olinePassengers = new List<OlinePassenger>();
+        static List<Station> staions = new();
+        static List<OnlinePassenger> olinePassengers = new List<OnlinePassenger>();
         static List<Trip> trips = new List<Trip>();
 
         static List<Employee> employees = new List<Employee>();

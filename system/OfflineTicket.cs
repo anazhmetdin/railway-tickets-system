@@ -21,10 +21,4 @@ public class OfflineTicket : Ticket
     {
         return owner;
     }
-
-
-    /*    public override User getOwner()
-        {
-            throw new NotImplementedException();
-        }*/
 }

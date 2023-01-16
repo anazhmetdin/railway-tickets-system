@@ -8,7 +8,7 @@ namespace system
 {
     public class Train
     {
-        protected int id { get; }
-        protected int seatsCount { get; set; }
+        public int id { get; }
+        public int seatsCount { get; protected set; }
     }
 }

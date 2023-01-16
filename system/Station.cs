@@ -8,8 +8,8 @@ namespace system
 {
     public class Station
     {
-        protected string name { get; set; }
-        protected string location { get; set; }
+        public string name { get; protected set; }
+        public string location { get; protected set; }
         protected Station(string name, string location) 
         {
             this.name = name;

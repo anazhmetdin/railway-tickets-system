@@ -10,7 +10,9 @@ namespace system
     {
         List<OlineTicket> onlineTicketList;
 
-        public OnlinePassenger(int SSN, string username, string password, bool auth) : base(SSN, username, password, auth) {}
+        public OnlinePassenger(int SSN, string username, string password, bool auth) : base(SSN, username, password, auth) {
+            onlineTicketList = new();
+        }
 
         public bool addTicket(Ticket ticket)
         {
