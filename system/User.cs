@@ -13,14 +13,23 @@ namespace system
         public string password { get; set; }
         public bool auth { get; set; }
 
-        public User(int SSN, string username, string password, bool auth) 
+        public User(int SSN, string username, string password) 
         {
             this.SSN = SSN;
             this.username = username;
             this.password = password;
-            this.auth = auth;
+            this.auth = (login(username,password) != null);
         }
 
-        public abstract bool login(string username, string password);
+        public bool authenticated(string password)
+        {
+            auth = (this.password == password);
+            return auth;
+        }
+        public abstract User? login(string username, string password);
+        
+
+
+
     }
 }

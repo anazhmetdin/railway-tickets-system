@@ -18,7 +18,7 @@ namespace system
         public Train train { get; protected set; }
         public List<Ticket> tickets;
 
-        public Trip(int id, double price, DateTime date, Station from, Station to, Train train)
+        protected Trip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
             this.id = id;
             this.price = price;

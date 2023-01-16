@@ -10,8 +10,12 @@ namespace system
     {
         List<OlineTicket> onlineTicketList;
 
-        public OnlinePassenger(int SSN, string username, string password, bool auth) : base(SSN, username, password, auth) {
+        public OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) 
+        {
             onlineTicketList = new();
+            if (auth)
+                Admin.addToOnlinePassenger(this);
+
         }
 
         public bool addTicket(Ticket ticket)
@@ -29,9 +33,15 @@ namespace system
             throw new NotImplementedException();
         }
 
-        public override bool login(string username, string password)
+        public override OnlinePassenger? login(string username, string password)
         {
-            throw new NotImplementedException();
+            OnlinePassenger? oPassenger = Admin.getOnlinePassenger(username);
+            if (oPassenger != null && oPassenger.authenticated(password))
+            {
+                return oPassenger;
+            }
+            else
+                return null;
         }
     }
 }
