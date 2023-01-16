@@ -16,7 +16,6 @@ public class OfflineTicket : Ticket
         else
             return false;
     }
-
     public override Employee getOwner()
     {
         return owner;

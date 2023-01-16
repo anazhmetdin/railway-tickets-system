@@ -12,19 +12,12 @@ namespace system
         public int id { get; }
         public Trip trip { get; }
         public DateTime BookingDate { get; }
-
-
         public Ticket(int id, Trip trip)
         {
             this.id = id;
             this.trip = trip;
         }
-
-
-
         public abstract bool bookTicket();
-
-
         public abstract User getOwner();
     }
 }

@@ -56,6 +56,7 @@ namespace system
             }
             return null;
         }
+        #region Construcoting Classes
         private class ConstructableEmployee : Employee
         {
             public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) {}
@@ -73,6 +74,8 @@ namespace system
         {
             public ConstructableTrain(int seats, int id) : base(seats, id){}
         }
+        #endregion
+        #region Creation Methods
         public Employee createEmployee(int salary, int SSN, string username, string password)
         {
             return new ConstructableEmployee(salary, SSN, username, password);
@@ -89,7 +92,8 @@ namespace system
         {
             return new ConstructableTrip( id, price, date, from, to, train);
         }
-
+        #endregion
+        #region Login
         public override Admin? login(string username, string password)
         {
             Admin? admin = getAdmin(username);
@@ -100,5 +104,33 @@ namespace system
             else
                 return null;
         }
+        #endregion
+
+        #region Reports
+        
+        
+        #region Report 4
+        public static void ticketsEmployeeReport(Employee employee)
+        {
+
+            if (!employees.Contains(employee))
+                Console.WriteLine("Employee Doesn't Exist!");
+            else
+            {
+                String report =
+                    "Employee::\n" +
+                    $"ID: {employee.SSN}\n" +
+                    $"Username: {employee.username}\n" +
+                    $"Salary: {employee.salary}\n************\n" +
+                    "Tickets::\n" +
+                    $"Number: {employee.getTicket().Count}\n" +
+                    $"List:\n{employee.getTicket()}";
+                Console.WriteLine(report);
+            }
+        } 
+
+        #endregion
+        #endregion
+
     }
 }

@@ -41,7 +41,10 @@ namespace system
 
         public bool addTicket(Ticket ticket)
         {
-            throw new NotImplementedException();
+            tickets.Add(ticket);
+            if (tickets.Contains(ticket))
+                return true;
+            return false;
         }
 
     }

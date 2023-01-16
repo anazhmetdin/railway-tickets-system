@@ -8,7 +8,7 @@ namespace system
 {
     public class OnlinePassenger : User,TicketOwner
     {
-        List<OlineTicket> onlineTicketList;
+        List<OnlineTicket> onlineTicketList;
 
         public OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) 
         {
