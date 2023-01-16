@@ -10,5 +10,15 @@ namespace system
     {
         public int id { get; }
         public int seatsCount { get; protected set; }
+        
+        protected Train(int id, int seatsCount)
+        {
+            this.id = id;
+            this.seatsCount = seatsCount;
+        }
+
+
     }
+}
+
 }
