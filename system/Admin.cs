@@ -118,13 +118,17 @@ namespace system
 
         public Employee? createEmployee(int salary, int SSN, string username, string password)
         {
-            if (!auth) return null;
-            return new ConstructableEmployee(salary, SSN, username, password);
+            if (!auth || getEmployee(username) != null) return null;
+            ConstructableEmployee employee = new(salary, SSN, username, password);
+            employees.Add(employee);
+            return employee;
         }
         public Train? createTrain(int seats, int id)
         {
-            if (!auth) return null;
-            return new ConstructableTrain(seats, id);
+            if (!auth || getTrain(id) != null) return null;
+            ConstructableTrain train = new(seats, id);
+            trains.Add(train);
+            return train;
         }
         public Station? createStaion(string name, string location)
         {

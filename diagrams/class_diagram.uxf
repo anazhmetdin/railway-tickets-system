@@ -39,10 +39,10 @@
 +getTo(): Station
 +getTrain(): Train
 
-_+viewTips(to: Station = null, _
-_                    from: Station=null,_
-_                    fromDate: DateTime,_
-_                    toDate: DateTime): Trip[]_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>864</x><y>891</y><w>153</w><h>27</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;110;10;150;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1629</x><y>387</y><w>216</w><h>162</h></coordinates><panel_attributes>*OnlineTicket*
+_+getTrips(to: Station = null, _
+_                  from: Station=null,_
+_                  fromDate: DateTime,_
+_                  toDate: DateTime): Trip[]_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>864</x><y>891</y><w>153</w><h>27</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;110;10;150;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1629</x><y>387</y><w>216</w><h>162</h></coordinates><panel_attributes>*OnlineTicket*
 --
 -payment: Payment
 -owner: OnlinePassenger

@@ -44,5 +44,9 @@ namespace system
             throw new NotImplementedException();
         }
 
+        public static List<Trip> getTrips(string? from, string? to, DateTime? fromDate, DateTime? toDate)
+        {
+            return Admin.getTrip();
+        }
     }
 }

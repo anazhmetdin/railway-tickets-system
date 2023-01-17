@@ -8,11 +8,17 @@ namespace system
 {
     public class Payment
     {
-        public int id { get; }
-        public int cardNumber { get; }
-        public void payTicket(double price)
+        public Payment(int id, string cardNumber)
         {
+            this.id = id;
+            this.cardNumber = cardNumber;
+        }
 
+        public int id { get; }
+        public string cardNumber { get; }
+        public bool payTicket(double price)
+        {
+            return true;
         }
     }
 }
