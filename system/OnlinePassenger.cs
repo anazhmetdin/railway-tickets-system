@@ -29,9 +29,10 @@ namespace system
 
         public static OnlinePassenger? signup(int SSN, string username, string password)
         {
-            if (Admin.onlinePassengerExists(username))
+            OnlinePassenger op = new(SSN, username, password);
+            if (Admin.addOnlinePassenger(op))
             {
-                return new OnlinePassenger(SSN, username, password);
+                return op;
             }
             return null;
         }

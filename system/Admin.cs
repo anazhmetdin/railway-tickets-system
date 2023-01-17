@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using static System.Collections.Specialized.BitVector32;
 
 namespace system
 {
@@ -96,11 +98,6 @@ namespace system
             return trips.ConvertAll(trip => new ConstructableTrip(trip.id, trip.price, trip.date, trip.from, trip.to, trip.train) as Trip);
         }
 
-        public static bool onlinePassengerExists(string username)
-        {
-            return getOnlinePassenger(username) != null;
-        }
-
         private class ConstructableEmployee : Employee
         {
             public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) {}
@@ -131,17 +128,21 @@ namespace system
         }
         public Station? createStaion(string name, string location)
         {
-            if (!auth) return null;
-            return new ConstructableStation(name, location);
+            if (!auth || getStation(name) != null) return null;
+            ConstructableStation station =  new(name, location);
+            stations.Add(station);
+            return station;
         }
         public Trip? createTrip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
-            if (!auth) return null;
-            return new ConstructableTrip( id, price, date, from, to, train);
+            if (!auth || getTrip(id) != null) return null;
+            ConstructableTrip trip = new(id, price, date, from, to, train);
+            trips.Add(trip);
+            return trip;
         }
         public static Admin? createAdmin(int SSN, string username, string password, Admin? admin = null)
         {
-            if (admins == null || (admin != null && admin.auth))
+            if (admins == null || (admin != null && admin.auth && getAdmin(username) == null ))
             {
                 Admin newAdmin = new (SSN, username, password);
                 admins?.Add(newAdmin);
@@ -176,6 +177,24 @@ namespace system
                 return admin;
             }
             return null;
+        }
+
+        public static void ticketsDateReport(DateTime date)
+        {
+
+        }
+        public static void ticketsFromReport(int stationID)
+        {
+
+        }
+        
+        public static void ticketsToReport(int stationID)
+        {
+
+        }
+        public static void ticketsEmployeeReport(string username)
+        {
+
         }
     }
 }
