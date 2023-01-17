@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OnlinePassenger : User,TicketOwner
+    public class OnlinePassenger: User,TicketOwner
     {
-        List<OlineTicket> onlineTicketList;
+        List<OlineTicket> onlineTicketList = new();
 
-        public OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) 
-        {
-            onlineTicketList = new();
-            if (auth)
-                Admin.addToOnlinePassenger(this);
-
-        }
+        protected OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) {}
 
         public bool addTicket(Ticket ticket)
         {
@@ -33,15 +27,13 @@ namespace system
             throw new NotImplementedException();
         }
 
-        public override OnlinePassenger? login(string username, string password)
+        public static OnlinePassenger? signup(int SSN, string username, string password)
         {
-            OnlinePassenger? oPassenger = Admin.getOnlinePassenger(username);
-            if (oPassenger != null && oPassenger.authenticated(password))
+            if (Admin.onlinePassengerExists(username))
             {
-                return oPassenger;
+                return new OnlinePassenger(SSN, username, password);
             }
-            else
-                return null;
+            return null;
         }
     }
 }

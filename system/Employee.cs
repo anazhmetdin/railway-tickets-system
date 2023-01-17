@@ -9,15 +9,12 @@ namespace system
     public class Employee : User, TicketOwner
     {
         public int salary { get; set; }
-        List<OfflineTicket> tickets;
+        List<OfflineTicket> tickets = new();
 
 
         protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) 
         { 
-            this.salary = salary; 
-            this.tickets = new List<OfflineTicket>();
-            if (auth)
-                Admin.addToEmployee(this);
+            this.salary = salary;
         }
 
         public List<Ticket> getTicket()
@@ -33,17 +30,6 @@ namespace system
         public bool addTicket(Ticket ticket)
         {
             throw new NotImplementedException();
-        }
-
-        public override Employee? login(string username, string password)
-        {
-            Employee? employee = Admin.getEmployee(username);
-            if (employee != null && employee.authenticated(password))
-            {
-                return employee;
-            }
-            else
-                return null;
         }
     }
 }

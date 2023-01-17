@@ -20,10 +20,7 @@ namespace system
             this.trip = trip;
         }
 
-
-
         public abstract bool bookTicket();
-
 
         public abstract User getOwner();
     }

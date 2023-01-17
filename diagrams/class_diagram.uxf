@@ -144,16 +144,7 @@ Employee
 +ticketsToReport(station: Station): void
 +ticketsEmployeeReport(employee: Employee): void
 
-+RemoveTrain(train: Train): bool
-+RemoveStation(station: Station): bool
-+RemoveTrip(trip: Trip): bool
-+RemoveEmployee(train: Employee): bool
 
-+setSeatCountTrain(train: Train, seatCount: int): void
-
-+changeTripTrain(trip: Trip, train: Train): void
-
-_+addOnlinePassenger(onlinePassenger: OnlinePassenger)_
 
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>666</x><y>0</y><w>243</w><h>243</h></coordinates><panel_attributes>*/User/*
 --

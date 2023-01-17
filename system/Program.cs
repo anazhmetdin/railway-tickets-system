@@ -50,12 +50,24 @@ namespace system
             bool v = karim.Any("help");
     */
 
-            OnlinePassenger op = new OnlinePassenger(1, "refaat", "123");
-            string username = Console.ReadLine();
-            string password = Console.ReadLine();
+            string? username = Console.ReadLine();
+            string? password = Console.ReadLine();
+            int SSN = Convert.ToInt32(Console.ReadLine());
 
-            
+            OnlinePassenger? op = Admin.loginPassenger(username!, password!);
 
+            if (op != null)
+            {
+                Console.WriteLine(op.auth);
+            }
+            else
+            {
+                op = OnlinePassenger.signup(SSN, username!, password!);
+                Console.WriteLine("Signed up");
+            }
+
+            Admin admin = Admin.loginAdmin("admin", "admin")!;
+            Console.WriteLine(admin.auth);
 
 /*
             Console.ReadLine($"Username: {0}\nPassword: {1}", username,password);*/
