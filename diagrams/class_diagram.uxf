@@ -42,7 +42,7 @@
 _+viewTips(to: Station = null, _
 _                    from: Station=null,_
 _                    fromDate: DateTime,_
-_                    toDate: DateTime): Trip[]_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>864</x><y>891</y><w>153</w><h>27</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;110;10;150;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1629</x><y>387</y><w>216</w><h>153</h></coordinates><panel_attributes>*OnlineTicket*
+_                    toDate: DateTime): Trip[]_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>864</x><y>891</y><w>153</w><h>27</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;110;10;150;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1629</x><y>387</y><w>216</w><h>162</h></coordinates><panel_attributes>*OnlineTicket*
 --
 -payment: Payment
 -owner: OnlinePassenger
@@ -51,6 +51,7 @@ _                    toDate: DateTime): Trip[]_</panel_attributes><additional_at
                           owner: OnlinePassenger,
                           ID: string, trip: Trip)
 
++bookTicket(): bool
 +cancelTicket(): bool
 +getPayment(): Payment
 
@@ -67,7 +68,7 @@ _                    toDate: DateTime): Trip[]_</panel_attributes><additional_at
 
 +payTicket(price: Float):bool
 +reversePayment(price: Float): bool
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1647</x><y>297</y><w>27</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1773</x><y>531</y><w>27</w><h>99</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>171</x><y>117</y><w>378</w><h>1053</h></coordinates><panel_attributes>*Admin*
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1647</x><y>297</y><w>27</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1773</x><y>540</y><w>27</w><h>90</h></coordinates><panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>171</x><y>117</y><w>378</w><h>1053</h></coordinates><panel_attributes>*Admin*
 --
 _-trains: Train[*]_
 _-stations: Station[*]_
@@ -198,14 +199,14 @@ _+loginAdmin(username: string, password: string): Admin_
 --
 +Ticket( ID: string, trip: Trip)
 
-+bookTicket(): bool
++virtual bookTicket(): bool
 /+getOwner(): User/
 
 +getID(): int
 +getTrip(): Trip
 +getBookingDate(): DateTime
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1449</x><y>531</y><w>207</w><h>144</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;140;210;140;210;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>585</y><w>189</w><h>63</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>190;10;60;10;60;50;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>702</y><w>171</w><h>216</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>170;220;90;220;90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>513</y><w>612</w><h>396</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>660;420;660;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>270</y><w>594</w><h>171</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>640;10;150;10;150;170;10;170</additional_attributes></element><element><id>Relation</id><coordinates><x>1260</x><y>405</y><w>27</w><h>135</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>UMLNote</id><coordinates><x>27</x><y>378</y><w>126</w><h>126</h></coordinates><panel_attributes>inner classes to make
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1449</x><y>540</y><w>207</w><h>135</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;130;210;130;210;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>585</y><w>189</w><h>63</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>190;10;60;10;60;50;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>702</y><w>171</w><h>216</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>170;220;90;220;90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>513</y><w>612</w><h>396</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>660;420;660;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>270</y><w>594</w><h>171</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>640;10;150;10;150;170;10;170</additional_attributes></element><element><id>Relation</id><coordinates><x>1260</x><y>405</y><w>27</w><h>135</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;&gt;&gt;&gt;&gt;</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>UMLNote</id><coordinates><x>27</x><y>378</y><w>126</w><h>126</h></coordinates><panel_attributes>inner classes to make
 trip, train, station,
 and employee
 creatable only when
