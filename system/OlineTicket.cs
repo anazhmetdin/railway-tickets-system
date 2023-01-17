@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OlineTicket : Ticket
+    public class OnlineTicket : Ticket
     {
         public Payment payment { get; private set; }
         OnlinePassenger owner;
 
-        public OlineTicket(Payment payment, OnlinePassenger owner, int id, Trip trip) : base(id, trip)
+        public OnlineTicket(Payment payment, OnlinePassenger owner, int id, Trip trip) : base(id, trip)
 		{
             this.payment = payment;
             this.owner = owner;
