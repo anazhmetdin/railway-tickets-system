@@ -2,7 +2,7 @@
   "profiles": {
     "system": {
       "commandName": "Project",
-      "commandLineArgs": "passenger"
+      "commandLineArgs": "employee"
     }
   }
 }

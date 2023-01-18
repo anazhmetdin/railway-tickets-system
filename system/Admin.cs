@@ -84,8 +84,9 @@ namespace system
             return null;
         }
 
-        public static List<Train> getTrain()
+        public List<Train>? getTrain()
         {
+            if (!auth) { return null; }
             return trains.ConvertAll(train => new ConstructableTrain(train.id, train.seatsCount) as Train);
         }
         public static List<Station> getStation()
@@ -97,10 +98,15 @@ namespace system
         {
             return trips.ConvertAll(trip => new ConstructableTrip(trip.id, trip.price, trip.date, trip.from, trip.to, trip.train) as Trip);
         }
+        public List<Employee>? getEmployee()
+        {
+            if (!auth) { return null; }
+            return employees.ConvertAll(employee => new ConstructableEmployee(employee.salary, employee.SSN, employee.username) as Employee);
+        }
 
         private class ConstructableEmployee : Employee
         {
-            public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) {}
+            public ConstructableEmployee(int salary, int SSN, string username, string password = "") : base(salary, SSN, username, password) {}
 
         }
         private class ConstructableTrip : Trip
@@ -183,20 +189,19 @@ namespace system
             return null;
         }
 
-        public static void ticketsDateReport(DateTime date)
+        public static void ticketsDateReport(DateTime dateFrom, DateTime dateTo)
         {
 
         }
         public static void ticketsFromReport(int stationID)
         {
 
-        }
-        
+        }        
         public static void ticketsToReport(int stationID)
         {
 
         }
-        public static void ticketsEmployeeReport(string username)
+        public static void ticketsEmployeeReport(string username, DateTime dateFrom, DateTime dateTo)
         {
 
         }

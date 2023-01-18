@@ -17,12 +17,32 @@ namespace system
 
             {"PassengerMenu",
                 "1- Manage Tickets\n"+
-                "2- Book Ticket\n"+
+                "2- Book a Ticket\n"+
                 "0- Logout"},
 
             {"ManageOnlineTicket",
-                "1- Cancel Ticket\n"+
-                "2- Book New Ticket\n"+
+                "1- Cancel a Ticket\n"+
+                "2- Book a New Ticket\n"+
+                "3- Search in Your Tickets\n"+
+                "0- Return"},
+
+            {"EmployeeMenu",
+                "1- Book a Ticket\n"+
+                "0- Logout"},
+
+            {"AdminMenu",
+                "1- Add Station\n"+
+                "2- Add Train\n"+
+                "3- Add Trip\n"+
+                "4- Add Employee\n"+
+                "5- View Dashboard\n"+
+                "0- Logout"},
+
+            {"AdminDashboard",
+                "1- Tickets per date\n"+
+                "2- Tickets per source station\n"+
+                "3- Tickets per destination station\n"+
+                "4- Tickets per employee\n"+
                 "0- Return"}
         };
 
@@ -61,24 +81,58 @@ namespace system
             return option;
         }
 
-        private static OnlinePassenger? loginPassenger()
+        private static string GetPassword()
+        {
+            string pass = string.Empty;
+            ConsoleKey key;
+            do
+            {
+                var keyInfo = Console.ReadKey(intercept: true);
+                key = keyInfo.Key;
+
+                if (key == ConsoleKey.Backspace && pass.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    pass = pass[0..^1];
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    Console.Write("*");
+                    pass += keyInfo.KeyChar;
+                }
+            } while (key != ConsoleKey.Enter);
+
+            Console.WriteLine();
+            return pass;
+        }
+
+        private static string[] GetUserNamePasswor()
         {
             string? username, password;
+
+            Console.Clear();
+            Console.WriteLine("Login\n\n");
+
+            Console.WriteLine("Username: ");
+            username = Console.ReadLine();
+
+            Console.WriteLine("\nPassword: ");
+            password = GetPassword();
+
+            return new string[] { username!, password };
+        }
+
+        private static OnlinePassenger? loginPassenger()
+        {
+            string[] username_password;
             char key = '\0';
             OnlinePassenger? passenger = null;
 
             while (passenger == null && key != '0')
             {
-                Console.Clear();
-                Console.WriteLine("Login\n\n");
+                username_password = GetUserNamePasswor();
 
-                Console.WriteLine("Username: ");
-                username = Console.ReadLine();
-
-                Console.WriteLine("\nPassword: ");
-                password = Console.ReadLine();
-
-                passenger = Admin.loginPassenger(username!, password!);
+                passenger = Admin.loginPassenger(username_password[0], username_password[1]);
 
                 if (passenger == null)
                 {
@@ -92,7 +146,7 @@ namespace system
 
         private static OnlinePassenger? signupPassenger()
         {
-            string? username, password;
+            string? username = "", password = "";
             char key = '\0';
             int SSN = 0;
             OnlinePassenger? passenger = null;
@@ -103,10 +157,26 @@ namespace system
                 Console.WriteLine("Sign up\n\n");
 
                 Console.WriteLine("Username:");
-                username = Console.ReadLine();
-
+                if (username == "")
+                {
+                    username = Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine(username);
+                }
+                
                 Console.WriteLine("\nPassword:");
-                password = Console.ReadLine();
+                password = GetPassword();
+
+                Console.WriteLine("\nConfirm Password:");
+                if (password != GetPassword())
+                {
+                    Console.WriteLine("\nPasswords don't match, enter 0 to go back, press any key to try again");
+                    password = "";
+                    key = Console.ReadKey().KeyChar;
+                    continue;
+                }
 
                 try
                 {
@@ -122,7 +192,8 @@ namespace system
 
                 if (passenger == null)
                 {
-                    Console.WriteLine("\nWrong username or password, enter 0 to go back, or any key to try again");
+                    Console.WriteLine("\nUsername not available, enter 0 to go back, or any key to try again");
+                    username = "";
                     key = Console.ReadKey().KeyChar;
                 }
             }
@@ -148,10 +219,8 @@ namespace system
             }
         }
 
-        private static void PrintTickets(TicketOwner ticketOwner)
+        private static void PrintTickets(List<Ticket> tickets)
         {
-            List<Ticket> tickets = ticketOwner.getTicket();
-
             Console.WriteLine("Tickets:\n");
             Console.WriteLine("----------------------------------------------");
 
@@ -174,7 +243,7 @@ namespace system
             do
             {
                 Console.Clear();
-                PrintTickets(passenger);
+                PrintTickets(passenger.getTicket());
 
                 Console.WriteLine("\nEnter ticket ID, or press enter to cancel");
                 try { ticketID = Int32.Parse(Console.ReadLine()!); }
@@ -206,7 +275,7 @@ namespace system
                     }
                 }
             }
-            while (onlineTicket == null || ticketID != 0);
+            while (onlineTicket == null && ticketID != 0);
         }
 
         private static void PrintStations()
@@ -247,12 +316,12 @@ namespace system
                     Console.WriteLine("Wrong trip ID, enter 0 to go back or any key to try again");
                 }
             }
-            while (tripID != 0 || trip != null);
+            while (tripID != 0 && trip == null);
 
             return trip;
         }
 
-        private static Trip? PickTrip()
+        private static List<Trip> FilterTrips()
         {
             Console.Clear();
 
@@ -262,42 +331,106 @@ namespace system
             Console.WriteLine("Stations:");
             PrintStations();
 
-            Console.WriteLine("From which station? (name)");
+            Console.WriteLine("\nFrom which station? (name)");
             from = Console.ReadLine();
 
-            Console.WriteLine("To which station? (name)");
+            Console.WriteLine("\nTo which station? (name)");
             to = Console.ReadLine();
 
-            Console.WriteLine("From which date? (example: 4/10/2009 13:00:00)");
+            Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
             try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
 
-            Console.WriteLine("To which date? (example: 4/10/2009 13:00:00)");
+            Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
             try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
 
             List<Trip> trips = Trip.getTrips(from, to, fromDate, toDate);
 
-            return PickTrip(trips);
+            return trips;
         }
 
         private static void BookOnlineTicket(OnlinePassenger passenger)
         {
-            Trip? trip = PickTrip();
-            if (trip != null)
+            Trip? trip;
+            char key = '\0';
+            do
+            {
+                trip = PickTrip(FilterTrips());
+                Console.Clear();
+
+                if (trip != null)
+                {
+                    Console.WriteLine("\nEnter Your Card Number to pay " + trip.price + " L.E");
+                    string? cardNumber = Console.ReadLine();
+                    Console.WriteLine("\nEnter the 3-digits security number");
+                    Console.ReadLine();
+
+                    Payment payment = new Payment(getID(), cardNumber!);
+
+                    if (payment.payTicket(trip.price))
+                    {
+                        OnlineTicket ticket = new OnlineTicket(payment, passenger, getID(), trip);
+                        passenger.addTicket(ticket);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nNo trip was selected, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+            while (trip == null && key != '0');
+        }
+
+        private static void SearchTicket(OnlinePassenger passenger)
+        {
+            char key = '\0';
+            List<Ticket>? tickets = null;
+
+            do
             {
                 Console.Clear();
 
-                Console.WriteLine("Enter Your Card Number to pay " + trip.price + " L.E");
-                string? cardNumber = Console.ReadLine();
-                Console.WriteLine("Enter the 3-digits security number");
-                Console.ReadLine();
+                string? from = null, to = null;
+                DateTime? fromDate = null, toDate = null;
+                int? id = null;
 
-                Payment payment = new Payment(getID(), cardNumber!);
+                Console.WriteLine("Stations:");
+                PrintStations();
 
-                if (payment.payTicket(trip.price))
+                try
                 {
-                    Ticket ticket = new OnlineTicket(payment, passenger, getID(), trip);
-                    passenger.addTicket(ticket);
+                    Console.WriteLine("\nTicket Number");
+                    id = Int32.Parse(Console.ReadLine()!);
+                    if (id == 0)
+                    {
+                        throw new Exception();
+                    }
                 }
+                catch
+                {
+                    id = null;
+                }
+
+                Console.WriteLine("\nFrom which station? (name)");
+                from = Console.ReadLine();
+
+                Console.WriteLine("\nTo which station? (name)");
+                to = Console.ReadLine();
+
+                Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
+                try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+
+                Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
+                try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+
+                tickets = passenger.getTicket(id, from, to, fromDate, toDate);
+
+            }
+            while (tickets == null && key != '0');
+
+            if (tickets != null)
+            {
+                PrintTickets(tickets);
             }
         }
 
@@ -308,9 +441,9 @@ namespace system
             do
             {
                 PrintMenu("ManageOnlineTicket");
-                PrintTickets(passenger);
+                PrintTickets(passenger.getTicket());
 
-                userOption = GetUserOption("", 0, 2);
+                userOption = GetUserOption("", 0, 3);
 
                 if (userOption == 1)
                 {
@@ -319,6 +452,10 @@ namespace system
                 else if (userOption == 2)
                 {
                     BookOnlineTicket(passenger);
+                }
+                else if (userOption == 3)
+                {
+                    SearchTicket(passenger);
                 }
             }
             while (userOption != 0);
@@ -342,6 +479,8 @@ namespace system
                 }
             }
             while (userOption != 0);
+
+            passenger.logout();
         }
 
         private static void LandPassenger()
@@ -364,10 +503,14 @@ namespace system
                 else if (userOption == 2)
                 {
                     passenger = signupPassenger();
+                    if (passenger != null)
+                    {
+                        PassengerMenu(passenger);
+                    }
                 }
                 else if (userOption == 3)
                 {
-                    printTrips(Admin.getTrip());                    
+                    printTrips(FilterTrips());                    
 
                     Console.WriteLine("\nPress any key to go back");
                     Console.ReadKey();
@@ -376,14 +519,229 @@ namespace system
             while (userOption != 0);
         }
 
+        private static Employee? LoginEmployee()
+        {
+            string[] username_password;
+            char key = '\0';
+            Employee? employee = null;
+
+            while (employee == null && key != '0')
+            {
+                username_password = GetUserNamePasswor();
+
+                employee = Admin.loginEmployee(username_password[0], username_password[1]);
+
+                if (employee == null)
+                {
+                    Console.WriteLine("\nWrong username or password, enter 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+
+            return employee;
+        }
+
+        private static void BookOfflineTicket(Employee employee)
+        {
+            Trip? trip;
+            char key = '\0';
+            do
+            {
+                trip = PickTrip(FilterTrips());
+                Console.Clear();
+
+                if (trip != null)
+                {
+                    employee.bookTicket(trip);
+                }
+                else
+                {
+                    Console.WriteLine("\nNo trip was selected, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+            while (trip == null && key != '0');
+        }
+
+        private static void EmployeeMenu(Employee employee)
+        {
+            int userOption;
+
+            do
+            {
+                userOption = GetUserOption("EmployeeMenu", 0, 3);
+
+                if (userOption == 1)
+                {
+                    BookOfflineTicket(employee);
+                }
+            }
+            while (userOption != 0);
+
+            employee.logout();
+        }
+
         private static void LandEmployee()
         {
+            char userOption = '\0';
+            Employee? employee;
 
+            do
+            {
+                employee = LoginEmployee();
+
+                if (employee == null)
+                {
+                    Console.WriteLine("Wrong username or password, enter 0 to Exit, or any key to continue");
+                    userOption = Console.ReadKey().KeyChar;
+                }
+                else
+                {
+                    EmployeeMenu(employee);
+                }
+            }
+            while (employee == null && userOption != '0');
+        }
+
+        private static Admin? LoginAdmin()
+        {
+            string[] username_password;
+            char key = '\0';
+            Admin? admin = null;
+
+            while (admin == null && key != '0')
+            {
+                username_password = GetUserNamePasswor();
+
+                admin = Admin.loginAdmin(username_password[0], username_password[1]);
+
+                if (admin == null)
+                {
+                    Console.WriteLine("\nWrong username or password, enter 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+
+            return admin;
+        }
+
+        private static void AddStation(Admin admin)
+        {
+            string? name, location;
+            Station? station = null;
+            char key = '\0';
+            do
+            {
+                Console.Clear();
+                PrintStations();
+
+                Console.WriteLine("\n Add a New Station");
+
+                Console.WriteLine("\nStation Name:");
+                name = Console.ReadLine();
+
+                Console.WriteLine("\nStation Location");
+                location = Console.ReadLine();
+
+                if ((station = admin.createStaion(name!, location!)) != null)
+                {
+                    Console.WriteLine("This name alread exists, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+            while (key != '0' && station == null);
+        }
+
+        private static void PrintTrains(Admin admin)
+        {
+            Console.WriteLine("Trains:\n");
+            Console.WriteLine("----------------------------------------------");
+            foreach (var train in admin.getTrain()!)
+            {
+                Console.WriteLine("Train ID: " + train.id);
+                Console.WriteLine("Trip Seats Count: " + train.seatsCount);
+                Console.WriteLine("----------------------------------------------");
+            }
+        }
+
+        private static void AddTrain(Admin admin)
+        {
+            int seatsCount;
+            Train? train = null;
+            char key = '\0';
+            do
+            {
+                Console.Clear();
+                PrintTrains(admin);
+
+                Console.WriteLine("\n Add a New Train");
+
+                Console.WriteLine("\nSeats Count:");
+                seatsCount = Int32.Parse(Console.ReadLine()!);
+
+                if ((train = admin.createTrain(seatsCount, getID())) != null)
+                {
+                    Console.WriteLine("Couldn't add train, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+            while (key != '0' && train == null);
+        }
+
+        private static void AdminMenu(Admin admin)
+        {
+            int userOption;
+
+            do
+            {
+                userOption = GetUserOption("PassengerMenu", 0, 2);
+
+                if (userOption == 1)
+                {
+                    AddStation(admin);
+                }
+                else if (userOption == 2)
+                {
+                    AddTrain(admin);
+                }
+                else if (userOption == 3)
+                {
+                    //AddTrip(admin);
+                }
+                else if (userOption == 4)
+                {
+                    //AddEmployee(admin);
+                }
+                else if (userOption == 5)
+                {
+                    //ViewDashboard(admin);
+                }
+            }
+            while (userOption != 0);
+
+            admin.logout();
         }
 
         private static void LandAdmin()
         {
+            char userOption = '\0';
+            Admin? admin;
 
+            do
+            {
+                admin = LoginAdmin();
+
+                if (admin == null)
+                {
+                    Console.WriteLine("Wrong username or password, enter 0 to Exit, or any key to continue");
+                    userOption = Console.ReadKey().KeyChar;
+                }
+                else
+                {
+                    AdminMenu(admin);
+                }
+            }
+            while (admin == null && userOption != '0');
         }
 
         private static void Main(string[] args)

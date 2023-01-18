@@ -31,5 +31,10 @@ namespace system
         {
             throw new NotImplementedException();
         }
+
+        internal void bookTicket(Trip trip)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

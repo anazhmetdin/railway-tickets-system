@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OnlinePassenger: User,TicketOwner
+    public class OnlinePassenger: User
     {
         List<OnlineTicket> onlineTicketList = new();
 
         protected OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) {}
 
-        public bool addTicket(Ticket ticket)
+        public bool addTicket(OnlineTicket ticket)
         {
             throw new NotImplementedException();
         }
@@ -33,6 +33,16 @@ namespace system
             if (Admin.addOnlinePassenger(op))
             {
                 return op;
+            }
+            return null;
+        }
+
+        public List<Ticket>? getTicket(int? ID=null, string? to=null, string? from=null,
+            DateTime? fromDate=null, DateTime? toDate=null)
+        {
+            if (auth)
+            {
+                return new();
             }
             return null;
         }
