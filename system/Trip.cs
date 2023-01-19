@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
-
-namespace system
+﻿namespace system
 {
     public class Trip : TicketOwner
     {
@@ -42,12 +34,12 @@ namespace system
         public bool addTicket(Ticket ticket)
         {
             tickets.Add(ticket);
-            if (tickets.Contains(ticket))
-                return true;
-            return false;
+
+            return true;
+
         }
 
-        public static List<Trip> getTrips(string? from, string? to, DateTime? fromDate, DateTime? toDate)
+        public static List<Trip> getTrips(string from, string to, DateTime fromDate, DateTime toDate)
         {
             return Admin.getTrip();
         }

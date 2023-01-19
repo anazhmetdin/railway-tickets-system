@@ -1,40 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace system
 {
-    public class Employee : User, TicketOwner
+
+    public class Employee : User
     {
+
+
         public int salary { get; set; }
         List<OfflineTicket> tickets = new();
 
 
-        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) 
-        { 
+        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password)
+        {
             this.salary = salary;
         }
 
-        public List<Ticket> getTicket()
+        public List<OfflineTicket> getOfflineTickets()
         {
-            throw new NotImplementedException();
+            return tickets;
         }
 
-        public Ticket getTicket(int id)
+        public OfflineTicket getTicket(int id)
         {
-            throw new NotImplementedException();
+            OfflineTicket? t = default;
+            for (int i = 0; i < tickets.Count; i++)
+            {
+                if (tickets[i].id == id)
+                    t = tickets[i];
+            }
+
+            return t;
         }
 
-        public bool addTicket(Ticket ticket)
+        public bool addTicket(OfflineTicket ticket)
         {
-            throw new NotImplementedException();
+            tickets.Add(ticket);
+            return (tickets.Contains(ticket));
+
         }
 
-        internal void bookTicket(Trip trip)
+        public bool bookTicket(Trip trip)
         {
-            throw new NotImplementedException();
+
+            if (trip.hasEmptySeats())
+            {
+                trip.addTicket()     ;
+
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace system
     {
         public int SSN { get; }
         public string username { get; }
-        private string password;
+        public string password  { get; set; }
         public bool auth { get; protected set; }
 
         public User(int SSN, string username, string password) 

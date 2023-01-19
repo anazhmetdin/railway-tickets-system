@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OnlinePassenger : User,TicketOwner
+    public class OnlinePassenger : User
     {
         List<OnlineTicket> onlineTicketList;
 
@@ -18,19 +18,21 @@ namespace system
 
         }
 
-        public bool addTicket(Ticket ticket)
+        public bool addOnlineTicket(OnlineTicket ticket)
         {
-            throw new NotImplementedException();
+            onlineTicketList.Add(ticket);
+            return (onlineTicketList.Contains(ticket));
         }
 
-        public List<Ticket> getTicket()
+        public List<OnlineTicket> getOnlineTicket()
         {
-            throw new NotImplementedException();
+            return onlineTicketList;
         }
 
-        public Ticket getTicket(int id)
+        public OnlineTicket getOnlineTicket (int id)
         {
-            throw new NotImplementedException();
+           return onlineTicketList.Find(x => x.id == id);
+           
         }
 
         public override OnlinePassenger? login(string username, string password)
