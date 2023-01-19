@@ -9,10 +9,13 @@ namespace system
     public class Employee : User, TicketOwner
     {
         public int salary { get; set; }
-        List<OfflineTicket> tickets;
+        List<OfflineTicket> tickets = new();
 
 
-        protected Employee(int salary, int SSN, string username, string password, bool auth) : base(SSN, username, password, auth) => this.salary = salary;
+        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) 
+        { 
+            this.salary = salary;
+        }
 
         public List<Ticket> getTicket()
         {
@@ -29,7 +32,7 @@ namespace system
             throw new NotImplementedException();
         }
 
-        public override bool login(string username, string password)
+        internal void bookTicket(Trip trip)
         {
             throw new NotImplementedException();
         }

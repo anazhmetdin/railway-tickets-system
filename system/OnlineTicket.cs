@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OlineTicket : Ticket
+    public class OnlineTicket : Ticket
     {
         public Payment payment { get; private set; }
-        OnlinePassenger owner;
+        public OnlinePassenger owner { get; set; }
 
-        public OlineTicket(Payment payment, OnlinePassenger owner, int id, Trip trip) : base(id, trip)
+        public OnlineTicket(Payment payment, OnlinePassenger owner, int id, Trip trip) : base(id, trip)
 		{
             this.payment = payment;
             this.owner = owner;
@@ -25,13 +25,7 @@ namespace system
 
         public override bool bookTicket()
         {
-            if (trip.hasEmptySeats())
-            {
-                trip.addTicket(this);
-                return true;
-            }
-            else
-                return false;
+            return (trip.hasEmptySeats() && (payment.paid)) ? trip.addTicket(this) : false;
         }
         public override OnlinePassenger getOwner()
         {

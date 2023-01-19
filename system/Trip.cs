@@ -16,7 +16,7 @@ namespace system
         public Station from { get; protected set; }
         public Station to { get; protected set; }
         public Train train { get; protected set; }
-        public List<Ticket> tickets;
+        public List<Ticket> tickets = new();
 
         protected Trip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
@@ -31,31 +31,25 @@ namespace system
 
         public List<Ticket> getTicket()
         {
-            for (int i = 0; i < tickets.Count; i++)
-            {
-                return tickets[i];
-            }
+            throw new NotImplementedException();
         }
 
         public Ticket getTicket(int id)
         {
-          return  tickets.SingleOrDefault(t => t.id == id);
-            
+            throw new NotImplementedException();
         }
 
         public bool addTicket(Ticket ticket)
         {
-            if (hasEmptySeats())
-            {
-           tickets.Add(ticket);
-           
-            return true;
-            }
-            else
-            {
-                return false;   
-            }
+            tickets.Add(ticket);
+            if (tickets.Contains(ticket))
+                return true;
+            return false;
         }
 
+        public static List<Trip> getTrips(string? from, string? to, DateTime? fromDate, DateTime? toDate)
+        {
+            return Admin.getTrip();
+        }
     }
 }

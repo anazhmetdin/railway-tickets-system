@@ -9,18 +9,27 @@ namespace system
     public abstract class User
     {
         public int SSN { get; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public bool auth { get; set; }
+        public string username { get; }
+        private string password;
+        public bool auth { get; protected set; }
 
-        public User(int SSN, string username, string password, bool auth) 
+        public User(int SSN, string username, string password) 
         {
             this.SSN = SSN;
             this.username = username;
             this.password = password;
-            this.auth = auth;
+            this.auth = false;
         }
 
-        public abstract bool login(string username, string password);
+        public bool authenticate(string password)
+        {
+            auth = password == this.password;
+            return auth;
+        }
+
+        public void logout()
+        {
+            auth = false;
+        }
     }
 }
