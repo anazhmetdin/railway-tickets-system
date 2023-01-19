@@ -41,7 +41,7 @@
 
         public static List<Trip> getTrips(string from, string to, DateTime fromDate, DateTime toDate)
         {
-            return Admin.getTrip();
+            return Admin.getTrip(from, to, fromDate, toDate);
         }
     }
 }

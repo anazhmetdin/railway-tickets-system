@@ -8,7 +8,7 @@ namespace system
 {
     public class Admin : User
     {
-        public Admin(int SSN, string username, string password) :base(SSN, username, password) 
+        public Admin(int SSN, string username, string password) : base(SSN, username, password)
         {
             if (auth)
                 Admin.admins.Add(this);
@@ -51,7 +51,7 @@ namespace system
         {
             foreach (var onlinePassenger in onlinePassengers)
             {
-                if (onlinePassenger.username== username)
+                if (onlinePassenger.username == username)
                     return onlinePassenger;
             }
             return null;
@@ -59,20 +59,20 @@ namespace system
         #region Construcoting Classes
         private class ConstructableEmployee : Employee
         {
-            public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) {}
+            public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) { }
 
         }
         private class ConstructableTrip : Trip
         {
-            public ConstructableTrip(int id, double price, DateTime date, Station from, Station to, Train train) : base(id, price, date, from, to, train) {}
+            public ConstructableTrip(int id, double price, DateTime date, Station from, Station to, Train train) : base(id, price, date, from, to, train) { }
         }
         private class ConstructableStation : Station
         {
-            public ConstructableStation(string name, string location) : base(name, location) {}
+            public ConstructableStation(string name, string location) : base(name, location) { }
         }
         private class ConstructableTrain : Train
         {
-            public ConstructableTrain(int seats, int id) : base(seats, id){}
+            public ConstructableTrain(int seats, int id) : base(seats, id) { }
         }
         #endregion
         #region Creation Methods
@@ -90,14 +90,14 @@ namespace system
         }
         public Trip createTrip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
-            return new ConstructableTrip( id, price, date, from, to, train);
+            return new ConstructableTrip(id, price, date, from, to, train);
         }
         #endregion
         #region Login
-        public override Admin? login(string username, string password)
+        public Admin login(string username, string password)
         {
             Admin? admin = getAdmin(username);
-            if (admin != null && admin.authenticated(password))
+            if (admin != null && admin.authenticate(password))
             {
                 return admin;
             }
@@ -107,8 +107,8 @@ namespace system
         #endregion
 
         #region Reports
-        
-        
+
+
         #region Report 4
         public static void ticketsEmployeeReport(Employee employee)
         {
@@ -117,17 +117,22 @@ namespace system
                 Console.WriteLine("Employee Doesn't Exist!");
             else
             {
-                String report =
+                string report =
                     "Employee::\n" +
                     $"ID: {employee.SSN}\n" +
                     $"Username: {employee.username}\n" +
                     $"Salary: {employee.salary}\n************\n" +
                     "Tickets::\n" +
-                    $"Number: {employee.getTicket().Count}\n" +
-                    $"List:\n{employee.getTicket()}";
+                    $"Number: {employee.getOfflineTickets().Count}\n" +
+                    $"List:\n{employee.getOfflineTickets()}";
                 Console.WriteLine(report);
             }
-        } 
+        }
+
+        public static List<Trip> getTrip(string from, string to, DateTime fromDate, DateTime toDate)
+        {
+            return trips.Where(i => i.from.name == from && i.to.name == to && i.date >= fromDate && i.date <= toDate).ToList();
+        }
 
         #endregion
         #endregion
