@@ -16,7 +16,7 @@ namespace system
         public Station from { get; protected set; }
         public Station to { get; protected set; }
         public Train train { get; protected set; }
-        public List<Ticket> tickets;
+        public List<Ticket> tickets = new();
 
         protected Trip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
@@ -47,5 +47,9 @@ namespace system
             return false;
         }
 
+        public static List<Trip> getTrips(string? from, string? to, DateTime? fromDate, DateTime? toDate)
+        {
+            return Admin.getTrip();
+        }
     }
 }

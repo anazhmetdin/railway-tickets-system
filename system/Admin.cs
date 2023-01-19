@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using static System.Collections.Specialized.BitVector32;
 
 namespace system
 {
     public class Admin : User
     {
-        public Admin(int SSN, string username, string password) :base(SSN, username, password) 
+        static List<Admin> admins = new()
         {
-            if (auth)
-                Admin.admins.Add(this);
-        }
-
-        static List<Admin> admins = new List<Admin>();
+            Admin.createAdmin(12345, "admin", "admin")!
+        };
         static List<Train> trains = new List<Train>();
-        static List<Station> staions = new();
+        static List<Station> stations = new();
         static List<OnlinePassenger> onlinePassengers = new List<OnlinePassenger>();
         static List<Trip> trips = new List<Trip>();
         static List<Employee> employees = new List<Employee>();
 
-        public static void addToOnlinePassenger(OnlinePassenger passenger)
+        private Admin(int SSN, string username, string password) : base(SSN, username, password) { }
+
+        public static bool addOnlinePassenger(OnlinePassenger passenger)
         {
-            onlinePassengers.Add(passenger);
+            if (getOnlinePassenger(passenger.username) == null)
+            {
+                onlinePassengers.Add(passenger);
+                return true;
+            }
+            return false;
         }
-        public static void addToEmployee(Employee employee)
-        {
-            employees.Add(employee);
-        }
-        public static Admin? getAdmin(string username)
+
+        private static Admin? getAdmin(string username)
         {
             foreach (var admin in admins)
             {
@@ -38,7 +41,7 @@ namespace system
             }
             return null;
         }
-        public static Employee? getEmployee(string username)
+        private static Employee? getEmployee(string username)
         {
             foreach (var employee in employees)
             {
@@ -47,7 +50,7 @@ namespace system
             }
             return null;
         }
-        public static OnlinePassenger? getOnlinePassenger(string username)
+        private static OnlinePassenger? getOnlinePassenger(string username)
         {
             foreach (var onlinePassenger in onlinePassengers)
             {
@@ -56,10 +59,34 @@ namespace system
             }
             return null;
         }
+        public static Train? getTrain(int id)
+        {
+            foreach (Train train in trains)
+            {
+                if (train.id == id) return train;
+            }
+            return null;
+        }
+        public static Station? getStation(string name)
+        {
+            foreach (Station station in stations)
+            {
+                if (station.name == name) return station;
+            }
+            return null;
+        }
+        public static Trip? getTrip(int id)
+        {
+            foreach (Trip trip in trips)
+            {
+                if (trip.id == id) return trip;
+            }
+            return null;
+        }
         #region Construcoting Classes
         private class ConstructableEmployee : Employee
         {
-            public ConstructableEmployee(int salary, int SSN, string username, string password) : base(salary, SSN, username, password) {}
+            public ConstructableEmployee(int salary, int SSN, string username, string password = "") : base(salary, SSN, username, password) {}
 
         }
         private class ConstructableTrip : Trip
@@ -72,23 +99,40 @@ namespace system
         }
         private class ConstructableTrain : Train
         {
-            public ConstructableTrain(int seats, int id) : base(seats, id){}
+            public ConstructableTrain(int seats, int id) : base(seats, id) { }
+        }
+
+        public Employee? createEmployee(int salary, int SSN, string username, string password)
+        {
+            if (!auth || getEmployee(username) != null) return null;
+            ConstructableEmployee employee = new(salary, SSN, username, password);
+            employees.Add(employee);
+            return employee;
         }
         #endregion
         #region Creation Methods
         public Employee createEmployee(int salary, int SSN, string username, string password)
         {
-            return new ConstructableEmployee(salary, SSN, username, password);
+            if (!auth || getTrain(id) != null) return null;
+            ConstructableTrain train = new(seats, id);
+            trains.Add(train);
+            return train;
         }
-        public Train createTrain(int seats, int id)
+        public Station? createStaion(string name, string location)
         {
-            return new ConstructableTrain(seats, id);
+            if (!auth || getStation(name) != null) return null;
+            ConstructableStation station =  new(name, location);
+            stations.Add(station);
+            return station;
         }
-        public Station createStaion(string name, string location)
+        public Trip? createTrip(int id, double price, DateTime date, Station from, Station to, Train train)
         {
-            return new ConstructableStation(name, location);
+            if (!auth || getTrip(id) != null) return null;
+            ConstructableTrip trip = new(id, price, date, from, to, train);
+            trips.Add(trip);
+            return trip;
         }
-        public Trip createTrip(int id, double price, DateTime date, Station from, Station to, Train train)
+        public static Admin? createAdmin(int SSN, string username, string password, Admin? admin = null)
         {
             return new ConstructableTrip( id, price, date, from, to, train);
         }
@@ -97,12 +141,11 @@ namespace system
         public override Admin? login(string username, string password)
         {
             Admin? admin = getAdmin(username);
-            if (admin != null && admin.authenticated(password))
+            if (admin != null && admin.authenticate(password))
             {
                 return admin;
             }
-            else
-                return null;
+            return null;
         }
         #endregion
 
