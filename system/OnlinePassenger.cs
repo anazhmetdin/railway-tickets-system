@@ -35,10 +35,10 @@ namespace system
            
         }
 
-        public override OnlinePassenger? login(string username, string password)
+        public  OnlinePassenger login(string username, string password)
         {
-            OnlinePassenger? oPassenger = Admin.getOnlinePassenger(username);
-            if (oPassenger != null && oPassenger.authenticated(password))
+            OnlinePassenger oPassenger = Admin.getOnlinePassenger(username);
+            if (oPassenger != null && oPassenger.authenticate(password))
             {
                 return oPassenger;
             }

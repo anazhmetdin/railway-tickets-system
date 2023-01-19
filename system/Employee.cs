@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,14 +29,15 @@ namespace system
 
         public OfflineTicket getTicket(int id)
         {
-            OfflineTicket? t = default;
-            for (int i = 0; i < tickets.Count; i++)
-            {
-                if (tickets[i].id == id)
-                    t = tickets[i];
-            }
+            //OfflineTicket? t = default;
+            //for (int i = 0; i < tickets.Count; i++)
+            //{
+            //    if (tickets[i].id == id)
+            //        t = tickets[i];
+            //}
 
-            return t;
+            //return t;
+            return tickets.FirstOrDefault(t => t.id == id);
         }
 
         public bool addTicket(OfflineTicket ticket)
@@ -50,7 +52,9 @@ namespace system
 
             if (trip.hasEmptySeats())
             {
-                trip.addTicket()     ;
+                var random = new Random();
+                var ticket = new OfflineTicket(this, trip, random.Next(10000));
+                trip.addTicket(ticket);
 
                 return true;
             }
