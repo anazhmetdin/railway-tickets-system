@@ -282,6 +282,7 @@ namespace system
         {
             List<Station> stations = Admin.getStation();
 
+            Console.WriteLine("\nStations:");
             Console.WriteLine("----------------------------------------------");
             foreach (Station station in stations)
             {
@@ -328,7 +329,6 @@ namespace system
             string? from = null, to = null;
             DateTime? fromDate = null, toDate = null;
 
-            Console.WriteLine("Stations:");
             PrintStations();
 
             Console.WriteLine("\nFrom which station? (name)");
@@ -394,7 +394,6 @@ namespace system
                 DateTime? fromDate = null, toDate = null;
                 int? id = null;
 
-                Console.WriteLine("Stations:");
                 PrintStations();
 
                 try
@@ -625,10 +624,10 @@ namespace system
             return admin;
         }
 
-        private static void AddStation(Admin admin)
+        private static Station? AddStation(Admin admin)
         {
             string? name, location;
-            Station? station = null;
+            Station? station;
             char key = '\0';
             do
             {
@@ -645,16 +644,18 @@ namespace system
 
                 if ((station = admin.createStaion(name!, location!)) != null)
                 {
-                    Console.WriteLine("This name alread exists, press 0 to go back, or any key to try again");
+                    Console.WriteLine("\nThis name alread exists, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
                 }
             }
             while (key != '0' && station == null);
+
+            return station;
         }
 
         private static void PrintTrains(Admin admin)
         {
-            Console.WriteLine("Trains:\n");
+            Console.WriteLine("\nTrains:\n");
             Console.WriteLine("----------------------------------------------");
             foreach (var train in admin.getTrain()!)
             {
@@ -664,10 +665,10 @@ namespace system
             }
         }
 
-        private static void AddTrain(Admin admin)
+        private static Train? AddTrain(Admin admin)
         {
             int seatsCount;
-            Train? train = null;
+            Train? train;
             char key = '\0';
             do
             {
@@ -681,11 +682,327 @@ namespace system
 
                 if ((train = admin.createTrain(seatsCount, getID())) != null)
                 {
-                    Console.WriteLine("Couldn't add train, press 0 to go back, or any key to try again");
+                    Console.WriteLine("\nCouldn't add train, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
                 }
             }
             while (key != '0' && train == null);
+
+            return train;
+        }
+
+        private static Trip? AddTrip(Admin admin)
+        {
+            Console.Clear();
+
+            char key = '\0';
+
+            string? from, to;
+            DateTime date;
+            float price;
+
+            Station? fromStation, toStation;
+
+            Trip? trip = null;
+
+            do
+            {
+                PrintStations();
+
+                do
+                {
+                    Console.WriteLine("\nFrom which station? (name)");
+                    from = Console.ReadLine();
+                } while (from != null);
+
+                do
+                {
+                    Console.WriteLine("\nTo which station? (name)");
+                    to = Console.ReadLine();
+                } while (to != null);
+
+                do
+                {
+                    Console.WriteLine("\nWhich date time? (example: 4/10/2009 13:00:00)");
+                
+                } while(!DateTime.TryParse(Console.ReadLine(), out date));
+
+                do
+                {
+                    Console.WriteLine("\nWhat is the price");
+
+                } while (!float.TryParse(Console.ReadLine(), out price));
+
+
+                fromStation = Admin.getStation(from!);
+                toStation = Admin.getStation(to!);
+
+                if (fromStation == null || toStation == null)
+                {
+                    Console.WriteLine("Couldn't find these stations, press 0 to go back or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+            while (fromStation != null && toStation != null && key != '0');
+
+            if (key != '0')
+            {
+                Train? train;
+                int trainID;
+
+                do
+                {
+                    Console.Clear();
+                    PrintTrains(admin);
+
+                    Console.WriteLine($"\nFrom: {from}");
+                    Console.WriteLine($"To: {to}");
+                    Console.WriteLine($"On: {date}");
+
+                    do
+                    {
+                        Console.WriteLine("Which train:");
+                    } while (!Int32.TryParse(Console.ReadLine(), out trainID));
+
+                    train = Admin.getTrain(trainID);
+
+                    if (train == null)
+                    {
+                        Console.WriteLine("Couldn't find this train, press 0 to go back, or any key to try again");
+                        key = Console.ReadKey().KeyChar;
+                    }
+
+                } while (train == null && key != '0');
+
+                if (train != null)
+                {
+                    trip = admin.createTrip(getID(), price, date, fromStation!, toStation!, train);
+                }
+            }
+
+            return trip;
+        }
+
+        private static Employee? AddEmployee(Admin admin)
+        {
+            Employee? employee = null;
+            string? username = "", password = "";
+            char key = '\0';
+            int SSN = 0, salary = 0;
+
+            while (employee == null && key != '0')
+            {
+                Console.Clear();
+                Console.WriteLine("Sign up\n\n");
+
+                Console.WriteLine("Username:");
+                if (username == "")
+                {
+                    username = Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine(username);
+                }
+
+                Console.WriteLine("\nPassword:");
+                password = GetPassword();
+
+                Console.WriteLine("\nConfirm Password:");
+                if (password != GetPassword())
+                {
+                    Console.WriteLine("\nPasswords don't match, enter 0 to go back, press any key to try again");
+                    password = "";
+                    key = Console.ReadKey().KeyChar;
+                    continue;
+                }
+
+                try
+                {
+                    Console.WriteLine("\nSSN:");
+                    SSN = Convert.ToInt32(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine("\nInvalid SSN, enter 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                    continue;
+                }
+
+                do
+                {
+                    Console.WriteLine("\nSalary:");
+                } while (int.TryParse(Console.ReadLine(), out salary));
+
+                employee = admin.createEmployee(salary, SSN, username!, password);
+
+                if (employee == null)
+                {
+                    Console.WriteLine("\nUsername not available, enter 0 to go back, or any key to try again");
+                    username = "";
+                    key = Console.ReadKey().KeyChar;
+                }
+            }
+
+            return employee;
+        }
+
+        private static void ticketsDateReport(Admin admin)
+        {
+            DateTime fromDateTime, toDateTime;
+            do
+            {
+                Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
+            }
+            while (DateTime.TryParse(Console.ReadLine(), out fromDateTime));
+
+            do
+            {
+                Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
+            }
+            while (DateTime.TryParse(Console.ReadLine(), out toDateTime));
+
+            admin.ticketsDateReport(fromDateTime, toDateTime);
+        }
+
+        private static void ticketsFromReport(Admin admin)
+        {
+            Station? station;
+            string? stationName;
+            char key = '\0';
+
+            do
+            {
+                PrintStations();
+
+                do
+                {
+                    Console.WriteLine("Station Name (from):");
+                } while((stationName = Console.ReadLine()) != null);
+
+                station = Admin.getStation(stationName!);
+
+                if (station == null)
+                {
+                    Console.WriteLine("Wrong station name, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+                else
+                {
+                    admin.ticketsFromReport(stationName!);
+                }
+            } while(station == null && key != '0');
+        }
+
+        private static void ticketsToReport(Admin admin)
+        {
+            Station? station;
+            string? stationName;
+            char key = '\0';
+
+            do
+            {
+                PrintStations();
+
+                do
+                {
+                    Console.WriteLine("Station Name (to):");
+                } while ((stationName = Console.ReadLine()) != null);
+
+                station = Admin.getStation(stationName!);
+
+                if (station == null)
+                {
+                    Console.WriteLine("Wrong station name, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+                else
+                {
+                    admin.ticketsToReport(stationName!);
+                }
+            } while (station == null && key != '0');
+        }
+
+        private static void PrintEmployees(Admin admin)
+        {
+            Console.Clear();
+
+            Console.WriteLine("Employees usernames:");
+            Console.WriteLine("--------------------------------------------");
+            foreach (Employee employee in admin.getEmployee()!)
+            {
+                Console.WriteLine($"- {employee.username}");
+            }
+        }
+
+        private static void ticketsEmployeeReport(Admin admin)
+        {
+            Employee? employee;
+            string? username;
+            char key = '\0';
+            DateTime fromDateTime, toDateTime;
+
+            do
+            {
+                PrintEmployees(admin);
+
+                do
+                {
+                    Console.WriteLine("Employee username:");
+                } while ((username = Console.ReadLine()) != null);
+
+                do
+                {
+                    Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
+                }
+                while (DateTime.TryParse(Console.ReadLine(), out fromDateTime));
+
+                do
+                {
+                    Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
+                }
+                while (DateTime.TryParse(Console.ReadLine(), out toDateTime));
+
+                employee = admin.getEmployee()!.Find(employee => employee.username == username);
+
+                if (employee == null)
+                {
+                    Console.WriteLine("Wrong username, press 0 to go back, or any key to try again");
+                    key = Console.ReadKey().KeyChar;
+                }
+                else
+                {
+                    admin.ticketsEmployeeReport(username!, fromDateTime, toDateTime);
+                }
+            } while (employee == null && key != '0');
+        }
+
+        private static void ViewDashboard(Admin admin)
+        {
+            int userOption;
+
+            do
+            {
+                userOption = GetUserOption("AdminDashboard", 0, 4);
+
+                if (userOption == 1)
+                {
+                    ticketsDateReport(admin);
+                }
+                else if (userOption == 2)
+                {
+                    ticketsFromReport(admin);
+                }
+                else if (userOption == 3)
+                {
+                    ticketsToReport(admin);
+                }
+                else if (userOption == 4)
+                {
+                    ticketsEmployeeReport(admin);
+                }
+            }
+            while (userOption != 0);
         }
 
         private static void AdminMenu(Admin admin)
@@ -698,23 +1015,43 @@ namespace system
 
                 if (userOption == 1)
                 {
-                    AddStation(admin);
+                    if (AddStation(admin) != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Station was added successfully, press any key to go back");
+                        Console.ReadKey();
+                    }
                 }
                 else if (userOption == 2)
                 {
-                    AddTrain(admin);
+                    if (AddTrain(admin) != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Train was added successfully, press any key to go back");
+                        Console.ReadKey();
+                    }
                 }
                 else if (userOption == 3)
                 {
-                    //AddTrip(admin);
+                    if (AddTrip(admin) != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Trip was added successfully, press any key to go back");
+                        Console.ReadKey();
+                    }
                 }
                 else if (userOption == 4)
                 {
-                    //AddEmployee(admin);
+                    if (AddEmployee(admin) != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Employee was added successfully, press any key to go back");
+                        Console.ReadKey();
+                    }
                 }
                 else if (userOption == 5)
                 {
-                    //ViewDashboard(admin);
+                    ViewDashboard(admin);
                 }
             }
             while (userOption != 0);
