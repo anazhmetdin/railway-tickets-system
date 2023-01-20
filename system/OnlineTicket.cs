@@ -22,11 +22,6 @@ namespace system
         {
             return true;
         }
-
-        public override bool bookTicket()
-        {
-            return (trip.hasEmptySeats() && (payment.paid)) ? trip.addTicket(this) : false;
-        }
         public override OnlinePassenger getOwner()
         {
             return owner;

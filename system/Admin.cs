@@ -83,6 +83,10 @@ namespace system
             }
             return null;
         }
+        public static List<Trip>? getTrips()
+        {
+            return trips;
+        }
         #region Construcoting Classes
         private class ConstructableEmployee : Employee
         {
@@ -150,28 +154,83 @@ namespace system
         #endregion
 
         #region Reports
-        
-        
-        #region Report 4
-        public static void ticketsEmployeeReport(Employee employee)
+
+        #region Report 1
+        public void ticketsDateReport(DateTime dateFrom, DateTime dateTo)
+        {
+            String? report = default(String?);
+            String? ticketDetails = default(String?);
+            int ticketCounter = 0;
+            double totalPrice = default;
+            for (int i = 0; i < trips.Count;i++)
+            {
+                if (dateFrom <= trips[i].date && trips[i].date <= dateTo)
+                {
+                    for (int j = 0; j < trips[i].tickets.Count; j++)
+                    {
+                        totalPrice += trips[i].price;
+                        ticketCounter++;
+                        ticketDetails +=
+                        $"Ticket ( {ticketCounter} )" +
+                        $"ID: {trips[i].tickets[j].id}\n" +
+                        $"Booking Date: {trips[i].tickets[j].BookingDate}\n" +
+                        $"From: {trips[i].from}\n" +
+                        $"To: {trips[i].to}\n" +
+                        $"Price: {trips[i].price}" +
+                        "********************************\n";
+                    }
+                }
+
+            }
+            report = $"Tickets Report Using Date ::\n\nTickets Number = {ticketCounter}\nTotal Tickets Price = {totalPrice}\n"  + ticketDetails;
+            Console.WriteLine(report);
+        }
+        #endregion
+
+        #region Report 2
+        public void ticketsFromReport(string stationName)
         {
 
-            if (!employees.Contains(employee))
+        }
+
+        #endregion
+        #region Report 3
+        public void ticketsToReport(string stationName)
+        {
+        }
+        #endregion
+        #region Report 4
+        public void ticketsEmployeeReport(string username, DateTime dateFrom, DateTime dateTo)
+        {
+            Employee? employee = getEmployee(username);
+            if (employees == null)
                 Console.WriteLine("Employee Doesn't Exist!");
             else
             {
+                String? ticketShow = default(String?);
+                
+                foreach(Ticket ticket in employee.getTicket())
+                {
+                    ticketShow =
+                            $"ID: {ticket.id}\n" +
+                            $"Booking Date: {ticket.BookingDate}\n" +
+                            $"From: {ticket.trip.from}\n" +
+                            $"To: {ticket.trip.to}\n" +
+                            $"Price: {ticket.trip.price}" +
+                            "********************************\n";
+                }
+                
                 String report =
                     "Employee::\n" +
                     $"ID: {employee.SSN}\n" +
                     $"Username: {employee.username}\n" +
                     $"Salary: {employee.salary}\n************\n" +
                     "Tickets::\n" +
-                    $"Number: {employee.getTicket().Count}\n" +
-                    $"List:\n{employee.getTicket()}";
+                    $"Total Number: {employee.getTicket().Count}\n" +
+                    $"{ticketShow}";
                 Console.WriteLine(report);
             }
-        } 
-
+        }
         #endregion
         #endregion
 

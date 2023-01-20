@@ -10,20 +10,20 @@ namespace system
     {
         public int id { get; }
         public int cardNumber { get; }
-        public OnlineTicket onlineTcket { get; }
         public double paymentAmount { get; set; }
+        public Trip? trip { get; set; }
         public bool paid { get { return paid; } set { paid = false; } }
-        public Payment(int _id, int _cardNumber, OnlineTicket _onlineTicket, double _paymentAmount)
+        public Payment(int _id, int _cardNumber,Trip _trip)
         {
             id= _id;
             cardNumber= _cardNumber;
-            onlineTcket= _onlineTicket;
-            paymentAmount= _paymentAmount;
-            paid= (onlineTcket.trip.price >= paymentAmount) ? true : false;
+            trip= _trip;
+            paymentAmount= trip.price;
+            paid= (trip.price >= paymentAmount);
         }
         public bool payTicket(double _paymentAmount)
         {
-                return paid = (onlineTcket.trip.price >= _paymentAmount) ? true : false;
+                return paid = (trip?.price >= _paymentAmount);
         }
         public bool reversePayment()
         {

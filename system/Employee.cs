@@ -6,35 +6,34 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class Employee : User, TicketOwner
+    public class Employee : TicketsOwner
     {
         public int salary { get; set; }
-        List<OfflineTicket> tickets = new();
+        new List<OfflineTicket> tickets = new();
 
+        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) => this.salary = salary;
 
-        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) 
-        { 
-            this.salary = salary;
-        }
-
-        public List<Ticket> getTicket()
+        public override bool bookTicket(Trip trip, int _cardnumber)
         {
-            throw new NotImplementedException();
-        }
-
-        public Ticket getTicket(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool addTicket(Ticket ticket)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void bookTicket(Trip trip)
-        {
-            throw new NotImplementedException();
+            if (trip.hasEmptySeats())
+            {
+                int ticketId = Int32.Parse(trip.date.ToString("yyyyMMddHHmm")+ trip.tickets.Count.ToString()+trip.id.ToString());
+                var ticket = new OfflineTicket(this, trip, ticketId);
+                tickets.Add(ticket);
+                trip.addTicket(ticket);
+                return true;
+            }
+            else
+                return false;
         }
     }
+
+/*        public bool addTicket(OfflineTicket ticket)
+        {
+            tickets.Add(ticket);
+            return (tickets.Contains(ticket));
+
+        }
+*/
 }
+

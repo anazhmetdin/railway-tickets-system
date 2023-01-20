@@ -17,7 +17,6 @@ namespace system
             this.id = id;
             this.trip = trip;
         }
-        public abstract bool bookTicket();
         public abstract User getOwner();
     }
 }

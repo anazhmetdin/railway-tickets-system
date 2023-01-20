@@ -8,7 +8,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace system
 {
-    public class Trip : TicketOwner
+    public class Trip
     {
         public int id { get; }
         public double price { get; protected set; }
@@ -29,15 +29,20 @@ namespace system
         }
         public bool hasEmptySeats() { return (train.seatsCount > tickets.Count); }
 
-        public List<Ticket> getTicket()
+/*        public List<Ticket> getTicket()
         {
-            throw new NotImplementedException();
+            return tickets;
         }
 
-        public Ticket getTicket(int id)
+        public Ticket? getTicket(int id)
         {
-            throw new NotImplementedException();
-        }
+
+            for (int i = 0; i < tickets.Count; i++)
+            {
+                if (tickets[i].id == id) return tickets[i];
+            }
+            return null;
+        }*/
 
         public bool addTicket(Ticket ticket)
         {
@@ -49,7 +54,32 @@ namespace system
 
         public static List<Trip> getTrips(string? from, string? to, DateTime? fromDate, DateTime? toDate)
         {
-            return Admin.getTrip();
+            
+            List<Trip> allTrips = Admin.getTrips();
+            List<Trip> result = new();
+            if (from != null || to != null || fromDate != null || toDate != null)
+            {
+                for (int i = 0; i < allTrips.Count; i++)
+                {
+                    if (from != null && to != null && allTrips[i].from.ToString() == from && allTrips[i].to.ToString() == to)
+                        result.Add(allTrips[i]);
+                    else if (fromDate != null && toDate != null && fromDate <= allTrips[i].date && allTrips[i].date <= toDate)
+                        result.Add(allTrips[i]);
+                    else if
+                        (
+                        allTrips[i].from.ToString() == from && allTrips[i].to.ToString() == to
+                        &&
+                        fromDate <= allTrips[i].date && allTrips[i].date <= toDate
+                        )
+                        result.Add(allTrips[i]);
+                    else
+                        result = null;
+                }   
+            }
+            else if (from == null && to == null && fromDate == null && toDate == null)
+                        result = allTrips;
+
+            return result;
         }
     }
 }
