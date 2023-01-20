@@ -189,19 +189,93 @@ namespace system
             return null;
         }
 
-        public static void ticketsDateReport(DateTime dateFrom, DateTime dateTo)
+        public void ticketsDateReport(DateTime dateFrom, DateTime dateTo)
         {
 
         }
-        public static void ticketsFromReport(int stationID)
+        public void ticketsFromReport(string stationName)
         {
+            Station? station = getStation(stationName);
+            int totalCount = 0;
+            double totalPrice = 0;
 
+            if (station != null)
+            {
+                Console.WriteLine($"Tickets booked from station {stationName}:");
+                Console.WriteLine("----------------------------------------------");
+                foreach (Trip trip in trips)
+                {
+                    if (trip.from.name == stationName)
+                    {
+                        totalCount += trip.tickets.Count;
+                        totalPrice += trip.price * trip.tickets.Count;
+
+                        Console.WriteLine($"\tTrip ID: {trip.id}:");
+                        Console.WriteLine($"\tAvailable Seats: {trip.train.seatsCount}:");
+                        Console.WriteLine($"\tBooked tickets count: {trip.tickets.Count}:");
+                        Console.WriteLine($"\tTicket price: {trip.price}:");
+                        Console.WriteLine($"\tBooked tickets price: {trip.price * trip.tickets.Count}:");
+
+                        Console.WriteLine($"\n\tTickets:");
+                        Console.WriteLine("----------------------------------------------");
+                        foreach (Ticket ticket in trip.tickets)
+                        {
+                            Console.WriteLine("\t\tTicket ID: " + ticket);
+                            Console.WriteLine("\t\tTrip ID: " + ticket.trip.id);
+                            Console.WriteLine("\t\tTrip To: " + ticket.trip.to.location);
+                            Console.WriteLine("\t\tTrip Date: " + ticket.trip.date);
+                            Console.WriteLine("\t\tBooking Date: " + ticket.BookingDate);
+                            Console.WriteLine("----------------------------------------------");
+                        }
+                    }
+
+                    Console.WriteLine($"\n\nTotal tickets count: {totalCount}");
+                    Console.WriteLine($"Total tickets price: {totalPrice}");
+                }
+            }
         }        
-        public static void ticketsToReport(int stationID)
+        public void ticketsToReport(string stationName)
         {
+            Station? station = getStation(stationName);
+            int totalCount = 0;
+            double totalPrice = 0;
 
+            if (station != null)
+            {
+                Console.WriteLine($"Tickets booked to station {stationName}:");
+                Console.WriteLine("----------------------------------------------");
+                foreach (Trip trip in trips)
+                {
+                    if (trip.to.name == stationName)
+                    {
+                        totalCount += trip.tickets.Count;
+                        totalPrice += trip.price * trip.tickets.Count;
+
+                        Console.WriteLine($"\tTrip ID: {trip.id}:");
+                        Console.WriteLine($"\tAvailable Seats: {trip.train.seatsCount}:");
+                        Console.WriteLine($"\tBooked tickets count: {trip.tickets.Count}:");
+                        Console.WriteLine($"\tTicket price: {trip.price}:");
+                        Console.WriteLine($"\tBooked tickets price: {trip.price * trip.tickets.Count}:");
+
+                        Console.WriteLine($"\n\tTickets:");
+                        Console.WriteLine("----------------------------------------------");
+                        foreach (Ticket ticket in trip.tickets)
+                        {
+                            Console.WriteLine("\t\tTicket ID: " + ticket);
+                            Console.WriteLine("\t\tTrip ID: " + ticket.trip.id);
+                            Console.WriteLine("\t\tTrip To: " + ticket.trip.to.location);
+                            Console.WriteLine("\t\tTrip Date: " + ticket.trip.date);
+                            Console.WriteLine("\t\tBooking Date: " + ticket.BookingDate);
+                            Console.WriteLine("----------------------------------------------");
+                        }
+                    }
+
+                    Console.WriteLine($"\n\nTotal tickets count: {totalCount}");
+                    Console.WriteLine($"Total tickets price: {totalPrice}");
+                }
+            }
         }
-        public static void ticketsEmployeeReport(string username, DateTime dateFrom, DateTime dateTo)
+        public void ticketsEmployeeReport(string username, DateTime dateFrom, DateTime dateTo)
         {
 
         }
