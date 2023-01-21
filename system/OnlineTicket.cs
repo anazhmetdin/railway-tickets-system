@@ -9,7 +9,7 @@ namespace system
     public class OnlineTicket : Ticket
     {
         public Payment payment { get; private set; }
-        OnlinePassenger owner;
+        public OnlinePassenger owner { get; }
 
         public OnlineTicket(Payment payment, OnlinePassenger owner, long id, Trip trip) : base(id, trip)
 		{
@@ -18,24 +18,14 @@ namespace system
         }
 
 
-        public bool cancelTicket()
+        public bool cancelTicket(OnlinePassenger passenger)
         {            
-            return payment.reversePayment();
-        }
-
-        public override bool bookTicket()
-        {
-            if (trip.hasEmptySeats())
+            if (passenger.SSN == owner.SSN && passenger.auth) 
             {
-                trip.addTicket(this);
-                return true;
+                return payment.reversePayment();
             }
-            else
-                return false;
-        }
-        public override OnlinePassenger getOwner()
-        {
-            return owner;
+
+            return false;
         }
     }
 }

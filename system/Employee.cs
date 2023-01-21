@@ -20,7 +20,7 @@ namespace system
 
         public override bool bookTicket(Trip trip, string cardNumber = "", string threeDigitsSecurity = "")
         {
-            if (trip.hasEmptySeats())
+            if (auth && trip.hasEmptySeats())
             {
                 int ticketId = Int32.Parse(trip.date.ToString("yyyyMMddHHmm") + trip.tickets.Count.ToString() + trip.id.ToString());
                 var ticket = new OfflineTicket(this, trip, ticketId);

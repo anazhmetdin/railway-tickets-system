@@ -20,9 +20,5 @@ namespace system
             this.trip = trip;
             BookingDate= DateTime.Now;
         }
-
-        public abstract bool bookTicket();
-
-        public abstract User getOwner();
     }
 }

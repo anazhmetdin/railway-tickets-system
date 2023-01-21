@@ -16,7 +16,7 @@ namespace system
 
         public override bool bookTicket(Trip trip, string cardNumber, string threeDigitsSecurity)
         {
-            if (trip.hasEmptySeats())
+            if (auth && trip.hasEmptySeats())
             {
                 long ticketPaymentId = long.Parse(trip.date.ToString("yyyyMMddHHmm") + trip.tickets.Count.ToString() + trip.id.ToString());
                 
@@ -40,25 +40,33 @@ namespace system
 
         public bool cancelTicket(int ticketId)
         {
+            if (!auth) { return false; }
+
             int tripTicketFlag = 0;
             for (int i = 0; i < tickets.Count; i++)
             {               
-                if (tickets[i].id == ticketId && tickets[i].cancelTicket())
+                if (tickets[i].id == ticketId)
                 {
-                    for (int j = 0; j < tickets[i].trip.tickets.Count; j++)
+                    if (tickets[i].trip.date > DateTime.Now && tickets[i].cancelTicket(this))
                     {
-                        if (tickets[i].trip.tickets[j].id == ticketId)
+                        for (int j = 0; j < tickets[i].trip.tickets.Count; j++)
                         {
-                            tickets[i].trip.tickets.Remove(tickets[i].trip.tickets[j]);
-                            tripTicketFlag = 1;
-                            break;
+                            if (tickets[i].trip.tickets[j].id == ticketId)
+                            {
+                                tickets[i].trip.tickets.Remove(tickets[i].trip.tickets[j]);
+                                tripTicketFlag = 1;
+                                break;
+                            }
                         }
+
+                        if (tripTicketFlag != 0)
+                        {
+                            tickets.Remove(tickets[i]);
+                        }
+
                     }
 
-                    if (tripTicketFlag != 0)
-                    {
-                        tickets.Remove(tickets[i]);
-                    }
+                    break;
                 }
             }
             return false;
