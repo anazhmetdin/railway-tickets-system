@@ -1,19 +1,26 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace system
 {
     internal class Program
     {
-        private static int uniqueID = 0;
+        private static int uniqueID = 1;
         private static int getID() { return uniqueID++; }
 
         private static readonly Dictionary<string, string> menues = new()
         {
+            {"MainMenu",
+                "1- Passenger\n"+
+                "2- Employee\n"+
+                "3- Admin\n"+
+                "0- Exit"},
+
             {"OnlinePassengerLanding",
                 "1- Login\n"+
                 "2- Signup\n"+
                 "3- View Trips\n"+
-                "0- Exit"},
+                "0- Return"},
 
             {"PassengerMenu",
                 "1- Manage Tickets\n"+
@@ -198,6 +205,7 @@ namespace system
                 }
             }
 
+            
             return passenger;
         }
 
@@ -226,8 +234,9 @@ namespace system
 
             foreach (var ticket in tickets)
             {
-                Console.WriteLine("Ticket ID: " + ticket);
+                Console.WriteLine("Ticket ID: " + ticket.id);
                 Console.WriteLine("Trip ID: " + ticket.trip.id);
+                Console.WriteLine("Trip From: " + ticket.trip.from.location);
                 Console.WriteLine("Trip To: " + ticket.trip.to.location);
                 Console.WriteLine("Trip Date: " + ticket.trip.date);
                 Console.WriteLine("Booking Date: " + ticket.BookingDate);
@@ -238,7 +247,6 @@ namespace system
         private static void CancelOnlineTicket(OnlinePassenger passenger)
         {
             int ticketID = 0;
-            OnlineTicket? onlineTicket = null;
 
             do
             {
@@ -253,15 +261,13 @@ namespace system
                     continue;
                 }
 
-                onlineTicket = (OnlineTicket) passenger.getTicket(ticketID);
-
-                if (onlineTicket != null)
+                if (ticketID != 0)
                 {
                     Console.WriteLine("\n Are you sure you want to delete this ticket: " + ticketID);
                     Console.WriteLine("press y to confirm, any other key to cancel");
                     if (Console.ReadKey().KeyChar == 'y')
                     {
-                        if (onlineTicket.cancelTicket())
+                        if (passenger.cancelTicket(ticketID))
                         {
                             Console.WriteLine("\nYour ticket has been cancelled");
                         }
@@ -275,7 +281,7 @@ namespace system
                     }
                 }
             }
-            while (onlineTicket == null && ticketID != 0);
+            while (ticketID != 0);
         }
 
         private static void PrintStations()
@@ -326,25 +332,37 @@ namespace system
         {
             Console.Clear();
 
+            int? id = null;
             string? from = null, to = null;
             DateTime? fromDate = null, toDate = null;
 
             PrintStations();
 
-            Console.WriteLine("\nFrom which station? (name)");
-            from = Console.ReadLine();
+            Console.WriteLine("\nTrip ID (empty string to ignore):");
+            try
+            {
+                id = Int32.Parse(Console.ReadLine());
+            }
+            catch { }
 
-            Console.WriteLine("\nTo which station? (name)");
-            to = Console.ReadLine();
+            if (id == null)
+            {
+                Console.WriteLine("\nFrom which station? (name) (empty string to ignore)");
+                from = Console.ReadLine();
+                from = from == "" ? null : from;
 
-            Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
-            try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+                Console.WriteLine("\nTo which station? (name)");
+                to = Console.ReadLine();
+                to = to == "" ? null : to;
 
-            Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
-            try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+                Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
+                try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
 
-            List<Trip> trips = Trip.getTrips(from, to, fromDate, toDate);
+                Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
+                try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+            }
 
+            List<Trip> trips = Trip.getTrip(id, from, to, fromDate, toDate);
             return trips;
         }
 
@@ -359,17 +377,28 @@ namespace system
 
                 if (trip != null)
                 {
-                    Console.WriteLine("\nEnter Your Card Number to pay " + trip.price + " L.E");
-                    string? cardNumber = Console.ReadLine();
-                    Console.WriteLine("\nEnter the 3-digits security number");
-                    Console.ReadLine();
-
-                    Payment payment = new Payment(getID(), cardNumber!);
-
-                    if (payment.payTicket(trip.price))
+                    string? cardNumber, threeDigits;
+                    do
                     {
-                        OnlineTicket ticket = new OnlineTicket(payment, passenger, getID(), trip);
-                        passenger.addTicket(ticket);
+                        Console.WriteLine("\nEnter Your Card Number to pay " + trip.price + " L.E");
+                    } while ((cardNumber = Console.ReadLine()) == null);
+
+                    do
+                    {
+                        Console.WriteLine("\nEnter the 3-digits security number");
+                    }
+                    while ((threeDigits = Console.ReadLine()) == null);
+
+                    if (passenger.bookTicket(trip, cardNumber!, threeDigits!))
+                    {
+                        Console.WriteLine("\nTicket was booked successfully, press any key to go back");
+                        
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nSomething went wrong, press 0 to go back, or any key to try again");
+                        key = Console.ReadKey().KeyChar;
                     }
                 }
                 else
@@ -394,33 +423,31 @@ namespace system
                 DateTime? fromDate = null, toDate = null;
                 int? id = null;
 
-                PrintStations();
+                PrintTickets(passenger.getTicket());
 
                 try
                 {
                     Console.WriteLine("\nTicket Number");
                     id = Int32.Parse(Console.ReadLine()!);
-                    if (id == 0)
-                    {
-                        throw new Exception();
-                    }
                 }
-                catch
+                catch {}
+
+                if (id == null)
                 {
-                    id = null;
+                    Console.WriteLine("\nFrom which station? (name)");
+                    from = Console.ReadLine();
+                    from = from == "" ? null : from;
+
+                    Console.WriteLine("\nTo which station? (name)");
+                    to = Console.ReadLine();
+                    to = to == "" ? null : to;
+
+                    Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
+                    try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
+
+                    Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
+                    try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
                 }
-
-                Console.WriteLine("\nFrom which station? (name)");
-                from = Console.ReadLine();
-
-                Console.WriteLine("\nTo which station? (name)");
-                to = Console.ReadLine();
-
-                Console.WriteLine("\nFrom which date? (example: 4/10/2009 13:00:00)");
-                try { fromDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
-
-                Console.WriteLine("\nTo which date? (example: 4/10/2009 13:00:00)");
-                try { toDate = Convert.ToDateTime(Console.ReadLine()); } catch { }
 
                 tickets = passenger.getTicket(id, from, to, fromDate, toDate);
 
@@ -429,8 +456,16 @@ namespace system
 
             if (tickets != null)
             {
+                Console.Clear();
                 PrintTickets(tickets);
             }
+            else
+            {
+                Console.WriteLine("\nNo tickets were found");
+            }
+
+            Console.WriteLine("\nPress any key to go back");
+            Console.ReadKey();
         }
 
         private static void ManageOnlineTickets(OnlinePassenger passenger)
@@ -551,7 +586,12 @@ namespace system
 
                 if (trip != null)
                 {
-                    employee.bookTicket(trip);
+                    if (employee.bookTicket(trip))
+                    {
+                        Console.WriteLine("\nTrip was booked successfully, press any key to continue");
+                        
+                        Console.ReadKey();
+                    }
                 }
                 else
                 {
@@ -613,12 +653,6 @@ namespace system
                 username_password = GetUserNamePasswor();
 
                 admin = Admin.loginAdmin(username_password[0], username_password[1]);
-
-                if (admin == null)
-                {
-                    Console.WriteLine("\nWrong username or password, enter 0 to go back, or any key to try again");
-                    key = Console.ReadKey().KeyChar;
-                }
             }
 
             return admin;
@@ -849,6 +883,10 @@ namespace system
 
         private static void ticketsDateReport(Admin admin)
         {
+
+            Console.Clear();
+            Console.WriteLine("Tickets per date\n");
+
             DateTime fromDateTime, toDateTime;
             do
             {
@@ -862,6 +900,7 @@ namespace system
             }
             while (DateTime.TryParse(Console.ReadLine(), out toDateTime));
 
+            Console.WriteLine();
             admin.ticketsDateReport(fromDateTime, toDateTime);
         }
 
@@ -873,18 +912,22 @@ namespace system
 
             do
             {
+                Console.Clear();
+
+
+                Console.WriteLine("Tickets per source station\n");
                 PrintStations();
 
                 do
                 {
-                    Console.WriteLine("Station Name (from):");
-                } while((stationName = Console.ReadLine()) != null);
+                    Console.WriteLine("\nStation Name (from):");
+                } while((stationName = Console.ReadLine()) == null);
 
                 station = Admin.getStation(stationName!);
 
                 if (station == null)
                 {
-                    Console.WriteLine("Wrong station name, press 0 to go back, or any key to try again");
+                    Console.WriteLine("\nWrong station name, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
                 }
                 else
@@ -902,18 +945,20 @@ namespace system
 
             do
             {
+                Console.Clear();
+                Console.WriteLine("Tickets per destination station\n");
                 PrintStations();
 
                 do
                 {
-                    Console.WriteLine("Station Name (to):");
-                } while ((stationName = Console.ReadLine()) != null);
+                    Console.WriteLine("\nStation Name (to):");
+                } while ((stationName = Console.ReadLine()) == null);
 
                 station = Admin.getStation(stationName!);
 
                 if (station == null)
                 {
-                    Console.WriteLine("Wrong station name, press 0 to go back, or any key to try again");
+                    Console.WriteLine("\nWrong station name, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
                 }
                 else
@@ -940,34 +985,33 @@ namespace system
             Employee? employee;
             string? username;
             char key = '\0';
-            DateTime fromDateTime, toDateTime;
+            DateTime? fromDateTime = null, toDateTime = null;
 
             do
             {
+                Console.Clear();
+                Console.WriteLine("Tickets per employee");
+
+                Console.WriteLine("\nEmployees usernames:");
+
                 PrintEmployees(admin);
 
                 do
                 {
-                    Console.WriteLine("Employee username:");
-                } while ((username = Console.ReadLine()) != null);
+                    Console.WriteLine("\nEmployee username:");
+                } while ((username = Console.ReadLine()) == null);
 
-                do
-                {
-                    Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
-                }
-                while (DateTime.TryParse(Console.ReadLine(), out fromDateTime));
+                Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
+                try {fromDateTime = DateTime.Parse(Console.ReadLine());} catch {  }
 
-                do
-                {
-                    Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
-                }
-                while (DateTime.TryParse(Console.ReadLine(), out toDateTime));
+                Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
+                try { toDateTime = DateTime.Parse(Console.ReadLine()); } catch { }
 
                 employee = admin.getEmployee()!.Find(employee => employee.username == username);
 
                 if (employee == null)
                 {
-                    Console.WriteLine("Wrong username, press 0 to go back, or any key to try again");
+                    Console.WriteLine("\nWrong username, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
                 }
                 else
@@ -1001,6 +1045,9 @@ namespace system
                 {
                     ticketsEmployeeReport(admin);
                 }
+
+
+                Console.ReadKey();
             }
             while (userOption != 0);
         }
@@ -1011,7 +1058,7 @@ namespace system
 
             do
             {
-                userOption = GetUserOption("PassengerMenu", 0, 2);
+                userOption = GetUserOption("AdminMenu", 0, 5);
 
                 if (userOption == 1)
                 {
@@ -1053,6 +1100,8 @@ namespace system
                 {
                     ViewDashboard(admin);
                 }
+
+                
             }
             while (userOption != 0);
 
@@ -1083,36 +1132,44 @@ namespace system
 
         private static void Main(string[] args)
         {
-            Admin testAdmin = Admin.loginAdmin("admin", "admin")!;
-            testAdmin.createTrain(200, 1);
-            testAdmin.createTrain(400, 2);
-            testAdmin.createTrain(400, 3);
-            testAdmin.createStaion("Cairo", "Cairo, Ramsis");
-            testAdmin.createStaion("Giza", "Giza");
-            testAdmin.createStaion("Alex", "Alexanderia, Mahatet Alraml");
-            testAdmin.createStaion("Fayoum", "Fayoum, Alsawaqi");
-            testAdmin.createEmployee(5600, 12345, "employee", "employee");
-            testAdmin.createTrip(1, 50, new DateTime(2023, 1, 24, 9, 30, 0), Admin.getStation("Cairo")!, Admin.getStation("Alex")!, Admin.getTrain(1)!);
-            testAdmin.createTrip(2, 50, new DateTime(2023, 1, 28, 13, 0, 0), Admin.getStation("Fayoum")!, Admin.getStation("Giza")!, Admin.getTrain(2)!);
-            testAdmin.createTrip(3, 50, new DateTime(2023, 1, 21, 8, 0, 0), Admin.getStation("Alex")!, Admin.getStation("Fayoum")!, Admin.getTrain(1)!);
+            Admin systemAdmin = Admin.loginAdmin("admin", "admin")!;
+            systemAdmin.createTrain(200, 1);
+            systemAdmin.createTrain(400, 2);
+            systemAdmin.createTrain(400, 3);
+            systemAdmin.createStaion("Cairo", "Cairo, Ramsis");
+            systemAdmin.createStaion("Giza", "Giza");
+            systemAdmin.createStaion("Alex", "Alexanderia, Mahatet Alraml");
+            systemAdmin.createStaion("Fayoum", "Fayoum, Alsawaqi");
+            systemAdmin.createEmployee(5600, 12345, "employee", "employee");
+            systemAdmin.createTrip(getID(), 50, new DateTime(2023, 1, 24, 9, 30, 0), Admin.getStation("Cairo")!, Admin.getStation("Alex")!, Admin.getTrain(1)!);
+            systemAdmin.createTrip(getID(), 50, new DateTime(2023, 1, 28, 13, 0, 0), Admin.getStation("Fayoum")!, Admin.getStation("Giza")!, Admin.getTrain(2)!);
+            systemAdmin.createTrip(getID(), 50, new DateTime(2023, 1, 21, 8, 0, 0), Admin.getStation("Alex")!, Admin.getStation("Fayoum")!, Admin.getTrain(1)!);
+            systemAdmin.logout();
 
-            if (args.Length != 1)
-            {
-                throw new Exception("Specify user type only: passenger, employee, or admin");
-            }
+            int userOption;
 
-            if (args[0] == "passenger")
+            do
             {
-                LandPassenger();
-            }
-            else if (args[0] == "employee")
-            {
-                LandEmployee();
-            }
-            else if (args[0] == "admin")
-            {
-                LandAdmin();
-            }
+                userOption = GetUserOption("MainMenu", 0, 3);
+
+                if (userOption == 1)
+                {
+                    LandPassenger();
+                    
+                }
+                else if (userOption == 2)
+                {
+                    LandEmployee();
+                    
+                }
+                else if (userOption == 3)
+                {
+                    LandAdmin();
+                    
+                }
+
+            } while (userOption != 0);
+
         }
     }
 }

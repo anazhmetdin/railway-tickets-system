@@ -9,15 +9,16 @@ namespace system
 {
     public abstract class Ticket 
     {
-        public int id { get; }
+        public long id { get; }
         public Trip trip { get; }
         public DateTime BookingDate { get; }
 
 
-        public Ticket(int id, Trip trip)
+        public Ticket(long id, Trip trip)
         {
             this.id = id;
             this.trip = trip;
+            BookingDate= DateTime.Now;
         }
 
         public abstract bool bookTicket();

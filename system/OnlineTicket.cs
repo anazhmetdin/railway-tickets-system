@@ -11,7 +11,7 @@ namespace system
         public Payment payment { get; private set; }
         OnlinePassenger owner;
 
-        public OnlineTicket(Payment payment, OnlinePassenger owner, int id, Trip trip) : base(id, trip)
+        public OnlineTicket(Payment payment, OnlinePassenger owner, long id, Trip trip) : base(id, trip)
 		{
             this.payment = payment;
             this.owner = owner;
@@ -19,8 +19,8 @@ namespace system
 
 
         public bool cancelTicket()
-        {
-            return true;
+        {            
+            return payment.reversePayment();
         }
 
         public override bool bookTicket()

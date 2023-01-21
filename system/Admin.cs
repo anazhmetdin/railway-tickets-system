@@ -12,7 +12,7 @@ namespace system
     {
         static List<Admin> admins = new()
         {
-            Admin.createAdmin(12345, "admin", "admin")!
+            createAdmin(12345, "admin", "admin")!
         };
         static List<Train> trains = new List<Train>();
         static List<Station> stations = new();
@@ -189,12 +189,41 @@ namespace system
             return null;
         }
 
-        public void ticketsDateReport(DateTime dateFrom, DateTime dateTo)
+        public void ticketsDateReport(DateTime? dateFrom, DateTime? dateTo)
         {
+            if (!auth) { return; }
 
+            String? report = "";
+            String? ticketDetails = "";
+            int ticketCounter = 0;
+            double totalPrice = 0;
+            for (int i = 0; i < trips.Count; i++)
+            {
+                if ((dateFrom == null || dateFrom <= trips[i].date) && (dateTo == null || trips[i].date <= dateTo))
+                {
+                    for (int j = 0; j < trips[i].tickets.Count; j++)
+                    {
+                        totalPrice += trips[i].price;
+                        ticketCounter++;
+                        ticketDetails +=
+                        $"Ticket ( {ticketCounter} )" +
+                        $"ID: {trips[i].tickets[j].id}\n" +
+                        $"Booking Date: {trips[i].tickets[j].BookingDate}\n" +
+                        $"From: {trips[i].from}\n" +
+                        $"To: {trips[i].to}\n" +
+                        $"Price: {trips[i].price}" +
+                        "********************************\n";
+                    }
+                }
+
+            }
+            report = $"Tickets Report Using Date ::\n\nTickets Number = {ticketCounter}\nTotal Tickets Price = {totalPrice}\n" + ticketDetails;
+            Console.WriteLine(report);
         }
         public void ticketsFromReport(string stationName)
         {
+            if (!auth) { return; }
+
             Station? station = getStation(stationName);
             int totalCount = 0;
             double totalPrice = 0;
@@ -236,6 +265,8 @@ namespace system
         }        
         public void ticketsToReport(string stationName)
         {
+            if (!auth) { return; }
+
             Station? station = getStation(stationName);
             int totalCount = 0;
             double totalPrice = 0;
@@ -275,9 +306,47 @@ namespace system
                 }
             }
         }
-        public void ticketsEmployeeReport(string username, DateTime dateFrom, DateTime dateTo)
+        public void ticketsEmployeeReport(string username, DateTime? dateFrom, DateTime? dateTo)
         {
+            if (!auth) { return; }
 
+            Employee? employee = getEmployee(username);
+            double totalPrice = 0;
+
+            if (employees == null)
+                Console.WriteLine("Employee Doesn't Exist!");
+            else
+            {
+                String? ticketShow = "";
+
+                foreach (Ticket ticket in employee!.getTicket())
+                {
+                    if ((dateFrom == null || ticket.BookingDate >= dateFrom) && (dateTo == null || ticket.BookingDate <= dateTo))
+                    {
+                        ticketShow +=
+                                $"ID: {ticket.id}\n" +
+                                $"Booking Date: {ticket.BookingDate}\n" +
+                                $"From: {ticket.trip.from}\n" +
+                                $"To: {ticket.trip.to}\n" +
+                                $"Price: {ticket.trip.price}" +
+                                "********************************\n";
+
+                        totalPrice += ticket.trip.price;
+                    }
+                }
+
+                String report =
+                    "Employee::\n" +
+                    $"ID: {employee.SSN}\n" +
+                    $"Username: {employee.username}\n" +
+                    $"Salary: {employee.salary}\n************\n" +
+                    "Tickets::\n" +
+                    $"Total Number: {employee.getTicket().Count}\n" +
+                    $"{ticketShow}\n"+
+                    "***************\n"+
+                    $"Total Price: {totalPrice}";
+                Console.WriteLine(report);
+            }
         }
     }
 }

@@ -8,16 +8,27 @@ namespace system
 {
     public class Payment
     {
-        public Payment(int id, string cardNumber)
+        public long id { get; }
+        public string cardNumber { get; }
+        public double paymentAmount { get; set; }
+        public bool paid { get; private set; }
+        public Payment(long _id, string _cardNumber)
         {
-            this.id = id;
-            this.cardNumber = cardNumber;
+            id = _id;
+            cardNumber = _cardNumber;
+            paymentAmount = 0;
+            paid = false;
         }
 
-        public int id { get; }
-        public string cardNumber { get; }
-        public bool payTicket(double price)
+        public bool payTicket(double price, string threeDigitsSecurity)
         {
+            paymentAmount = price;
+            return (paid = true);
+        }
+
+        public bool reversePayment()
+        {
+            paid = false;
             return true;
         }
     }

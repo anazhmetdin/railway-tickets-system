@@ -6,25 +6,62 @@ using System.Threading.Tasks;
 
 namespace system
 {
-    public class OnlinePassenger: User
+    public class OnlinePassenger: TicketOwner
     {
-        List<OnlineTicket> onlineTicketList = new();
+        public List<OnlineTicket> tickets { get; }
 
-        protected OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) {}
-
-        public bool addTicket(OnlineTicket ticket)
-        {
-            throw new NotImplementedException();
+        protected OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) {
+            tickets = new List<OnlineTicket>();
         }
 
-        public List<Ticket> getTicket()
+        public override bool bookTicket(Trip trip, string cardNumber, string threeDigitsSecurity)
         {
-            throw new NotImplementedException();
+            if (trip.hasEmptySeats())
+            {
+                long ticketPaymentId = long.Parse(trip.date.ToString("yyyyMMddHHmm") + trip.tickets.Count.ToString() + trip.id.ToString());
+                
+                Payment payment = new(ticketPaymentId, cardNumber);
+
+                if (payment.payTicket(trip.price, threeDigitsSecurity))
+                {
+                    var ticket = new OnlineTicket(payment, this, ticketPaymentId, trip);
+                    tickets.Add(ticket);
+                    trip.addTicket(ticket);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+                return false;
         }
 
-        public Ticket getTicket(int id)
+        public bool cancelTicket(int ticketId)
         {
-            throw new NotImplementedException();
+            int tripTicketFlag = 0;
+            for (int i = 0; i < tickets.Count; i++)
+            {               
+                if (tickets[i].id == ticketId && tickets[i].cancelTicket())
+                {
+                    for (int j = 0; j < tickets[i].trip.tickets.Count; j++)
+                    {
+                        if (tickets[i].trip.tickets[j].id == ticketId)
+                        {
+                            tickets[i].trip.tickets.Remove(tickets[i].trip.tickets[j]);
+                            tripTicketFlag = 1;
+                            break;
+                        }
+                    }
+
+                    if (tripTicketFlag != 0)
+                    {
+                        tickets.Remove(tickets[i]);
+                    }
+                }
+            }
+            return false;
         }
 
         public static OnlinePassenger? signup(int SSN, string username, string password)
@@ -37,14 +74,9 @@ namespace system
             return null;
         }
 
-        public List<Ticket>? getTicket(int? ID=null, string? to=null, string? from=null,
-            DateTime? fromDate=null, DateTime? toDate=null)
+        public override List<Ticket> getTicket()
         {
-            if (auth)
-            {
-                return new();
-            }
-            return null;
+            return tickets.Cast<Ticket>().ToList();
         }
     }
 }

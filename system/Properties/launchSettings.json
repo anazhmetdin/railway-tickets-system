@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "system": {
-      "commandName": "Project",
-      "commandLineArgs": "employee"
-    }
-  }
-}
