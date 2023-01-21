@@ -106,7 +106,7 @@ namespace system
 
         private class ConstructableEmployee : Employee
         {
-            public ConstructableEmployee(int salary, int SSN, string username, string password = "") : base(salary, SSN, username, password) {}
+            public ConstructableEmployee(double salary, int SSN, string username, string password = "") : base(salary, SSN, username, password) {}
 
         }
         private class ConstructableTrip : Trip
@@ -122,7 +122,7 @@ namespace system
             public ConstructableTrain(int seats, int id) : base(seats, id) { }
         }
 
-        public Employee? createEmployee(int salary, int SSN, string username, string password)
+        public Employee? createEmployee(double salary, int SSN, string username, string password)
         {
             if (!auth || getEmployee(username) != null) return null;
             ConstructableEmployee employee = new(salary, SSN, username, password);

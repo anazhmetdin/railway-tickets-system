@@ -8,8 +8,8 @@ namespace system
 {
     public class OnlineTicket : Ticket
     {
-        public Payment payment { get; private set; }
-        public OnlinePassenger owner { get; }
+        private Payment payment { get; set; }
+        private OnlinePassenger owner { get; }
 
         public OnlineTicket(Payment payment, OnlinePassenger owner, long id, Trip trip) : base(id, trip)
 		{

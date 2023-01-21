@@ -9,8 +9,8 @@ namespace system
     public class Payment
     {
         public long id { get; }
-        public string cardNumber { get; }
-        public double paymentAmount { get; set; }
+        private string cardNumber { get; }
+        private double paymentAmount { get; set; }
         public bool paid { get; private set; }
         public Payment(long _id, string _cardNumber)
         {
@@ -28,8 +28,12 @@ namespace system
 
         public bool reversePayment()
         {
-            paid = false;
-            return true;
+            if (paid)
+            {
+                paid = false;
+                return true;
+            }
+            return false;
         }
     }
 }

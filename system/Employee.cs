@@ -8,17 +8,17 @@ namespace system
 {
     public class Employee : TicketOwner
     {
-        public int salary { get; set; }
-        public List<OfflineTicket> tickets { get; }
+        public double salary { get; protected set; }
+        private List<OfflineTicket> tickets { get; }
 
 
-        protected Employee(int salary, int SSN, string username, string password) : base(SSN, username, password) 
+        protected Employee(double salary, int SSN, string username, string password) : base(SSN, username, password) 
         { 
             this.salary = salary;
             tickets = new List<OfflineTicket>();
         }
 
-        public override bool bookTicket(Trip trip, string cardNumber = "", string threeDigitsSecurity = "")
+        public bool bookTicket(Trip trip)
         {
             if (auth && trip.hasEmptySeats())
             {

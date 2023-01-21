@@ -30,7 +30,5 @@ namespace system
         }
 
         public abstract List<Ticket> getTicket();
-
-        public abstract bool bookTicket(Trip trip, string cardNumber, string threeDigitsSecurity);
     }
 }

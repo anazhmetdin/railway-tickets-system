@@ -8,13 +8,13 @@ namespace system
 {
     public class OnlinePassenger: TicketOwner
     {
-        public List<OnlineTicket> tickets { get; }
+        private List<OnlineTicket> tickets { get; }
 
         protected OnlinePassenger(int SSN, string username, string password) : base(SSN, username, password) {
             tickets = new List<OnlineTicket>();
         }
 
-        public override bool bookTicket(Trip trip, string cardNumber, string threeDigitsSecurity)
+        public bool bookTicket(Trip trip, string cardNumber, string threeDigitsSecurity)
         {
             if (auth && trip.hasEmptySeats())
             {
