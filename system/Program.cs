@@ -341,7 +341,7 @@ namespace system
             Console.WriteLine("\nTrip ID (empty string to ignore):");
             try
             {
-                id = Int32.Parse(Console.ReadLine());
+                id = Int32.Parse(Console.ReadLine()!);
             }
             catch { }
 
@@ -1002,10 +1002,10 @@ namespace system
                 } while ((username = Console.ReadLine()) == null);
 
                 Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
-                try {fromDateTime = DateTime.Parse(Console.ReadLine());} catch {  }
+                try {fromDateTime = DateTime.Parse(Console.ReadLine()!);} catch {  }
 
                 Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
-                try { toDateTime = DateTime.Parse(Console.ReadLine()); } catch { }
+                try { toDateTime = DateTime.Parse(Console.ReadLine()!); } catch { }
 
                 employee = admin.getEmployee()!.Find(employee => employee.username == username);
 
