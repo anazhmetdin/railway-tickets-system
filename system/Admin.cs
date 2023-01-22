@@ -209,10 +209,10 @@ namespace system
                         $"Ticket ( {ticketCounter} )" +
                         $"ID: {trips[i].tickets[j].id}\n" +
                         $"Booking Date: {trips[i].tickets[j].BookingDate}\n" +
-                        $"From: {trips[i].from}\n" +
-                        $"To: {trips[i].to}\n" +
+                        $"From: {trips[i].from.name}\n" +
+                        $"To: {trips[i].to.name}\n" +
                         $"Price: {trips[i].price}" +
-                        "********************************\n";
+                        "\n\n********************************\n\n\n";
                     }
                 }
 
@@ -257,11 +257,11 @@ namespace system
                             Console.WriteLine("----------------------------------------------");
                         }
                     }
-
-                    Console.WriteLine($"\n\nTotal tickets count: {totalCount}");
-                    Console.WriteLine($"Total tickets price: {totalPrice}");
                 }
+
             }
+                Console.WriteLine($"\n\nTotal tickets count: {totalCount}");
+                Console.WriteLine($"Total tickets price: {totalPrice}");
         }        
         public void ticketsToReport(string stationName)
         {
@@ -326,10 +326,10 @@ namespace system
                         ticketShow +=
                                 $"ID: {ticket.id}\n" +
                                 $"Booking Date: {ticket.BookingDate}\n" +
-                                $"From: {ticket.trip.from}\n" +
-                                $"To: {ticket.trip.to}\n" +
+                                $"From: {ticket.trip.from.name}\n" +
+                                $"To: {ticket.trip.to.name}\n" +
                                 $"Price: {ticket.trip.price}" +
-                                "********************************\n";
+                                "\n\n********************************\n\n\n";
 
                         totalPrice += ticket.trip.price;
                     }

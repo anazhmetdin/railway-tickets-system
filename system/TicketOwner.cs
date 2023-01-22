@@ -12,7 +12,7 @@ namespace system
         {
         }
 
-        public List<Ticket> getTicket(int? id = null, string? from = null, string? to = null, DateTime? fromDate = null, DateTime? toDate = null)
+        public List<Ticket> getTicket(long? id = null, string? from = null, string? to = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
             List<Ticket> result = new();
 

@@ -246,28 +246,27 @@ namespace system
 
         private static void CancelOnlineTicket(OnlinePassenger passenger)
         {
-            int ticketID = 0;
+            long? ticketID = null;
 
             do
             {
                 Console.Clear();
                 PrintTickets(passenger.getTicket());
 
-                Console.WriteLine("\nEnter ticket ID, or press enter to cancel");
-                try { ticketID = Int32.Parse(Console.ReadLine()!); }
-                catch {
-                    Console.WriteLine("\nInvalid ID, enter 0 to go back, or any key to try again");
-                    ticketID = Int32.Parse(""+Console.ReadKey().KeyChar);
-                    continue;
+                Console.WriteLine("\nTicket ID (empty string to ignore):");
+                try
+                {
+                    ticketID = long.Parse(Console.ReadLine()!);
                 }
+                catch { }
 
-                if (ticketID != 0)
+                if (ticketID != null)
                 {
                     Console.WriteLine("\n Are you sure you want to delete this ticket: " + ticketID);
                     Console.WriteLine("press y to confirm, any other key to cancel");
                     if (Console.ReadKey().KeyChar == 'y')
                     {
-                        if (passenger.cancelTicket(ticketID))
+                        if (passenger.cancelTicket((long)ticketID))
                         {
                             Console.WriteLine("\nYour ticket has been cancelled");
                         }
@@ -280,8 +279,9 @@ namespace system
                         Console.ReadKey();
                     }
                 }
+
             }
-            while (ticketID != 0);
+            while (ticketID == 0);
         }
 
         private static void PrintStations()
@@ -421,14 +421,14 @@ namespace system
 
                 string? from = null, to = null;
                 DateTime? fromDate = null, toDate = null;
-                int? id = null;
+                long? id = null;
 
                 PrintTickets(passenger.getTicket());
 
                 try
                 {
                     Console.WriteLine("\nTicket Number");
-                    id = Int32.Parse(Console.ReadLine()!);
+                    id = long.Parse(Console.ReadLine()!);
                 }
                 catch {}
 
@@ -622,24 +622,22 @@ namespace system
 
         private static void LandEmployee()
         {
-            char userOption = '\0';
             Employee? employee;
 
             do
             {
                 employee = LoginEmployee();
 
-                if (employee == null)
-                {
-                    Console.WriteLine("Wrong username or password, enter 0 to Exit, or any key to continue");
-                    userOption = Console.ReadKey().KeyChar;
-                }
-                else
+                if (employee != null)
                 {
                     EmployeeMenu(employee);
                 }
+                else
+                {
+                    break;
+                }
             }
-            while (employee == null && userOption != '0');
+            while (employee == null);
         }
 
         private static Admin? LoginAdmin()
@@ -866,7 +864,7 @@ namespace system
                 do
                 {
                     Console.WriteLine("\nSalary:");
-                } while (int.TryParse(Console.ReadLine(), out salary));
+                } while (!int.TryParse(Console.ReadLine(), out salary));
 
                 employee = admin.createEmployee(salary, SSN, username!, password);
 
@@ -892,13 +890,13 @@ namespace system
             {
                 Console.WriteLine("\nStart date (example: 4/10/2009 13:00:00)");
             }
-            while (DateTime.TryParse(Console.ReadLine(), out fromDateTime));
+            while (!DateTime.TryParse(Console.ReadLine(), out fromDateTime));
 
             do
             {
                 Console.WriteLine("\nEnd date (example: 4/10/2009 13:00:00)");
             }
-            while (DateTime.TryParse(Console.ReadLine(), out toDateTime));
+            while (!DateTime.TryParse(Console.ReadLine(), out toDateTime));
 
             Console.WriteLine();
             admin.ticketsDateReport(fromDateTime, toDateTime);
@@ -1165,7 +1163,6 @@ namespace system
                 else if (userOption == 3)
                 {
                     LandAdmin();
-                    
                 }
 
             } while (userOption != 0);

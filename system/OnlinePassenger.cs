@@ -38,7 +38,7 @@ namespace system
                 return false;
         }
 
-        public bool cancelTicket(int ticketId)
+        public bool cancelTicket(long ticketId)
         {
             if (!auth) { return false; }
 
@@ -77,6 +77,7 @@ namespace system
             OnlinePassenger op = new(SSN, username, password);
             if (Admin.addOnlinePassenger(op))
             {
+                op.authenticate(password);
                 return op;
             }
             return null;
