@@ -676,7 +676,7 @@ namespace system
                 Console.WriteLine("\nStation Location");
                 location = Console.ReadLine();
 
-                if ((station = admin.createStaion(name!, location!)) != null)
+                if ((station = admin.createStaion(name!, location!)) == null)
                 {
                     Console.WriteLine("\nThis name alread exists, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
@@ -714,7 +714,7 @@ namespace system
                 Console.WriteLine("\nSeats Count:");
                 seatsCount = Int32.Parse(Console.ReadLine()!);
 
-                if ((train = admin.createTrain(seatsCount, getID())) != null)
+                if ((train = admin.createTrain(seatsCount, getID())) == null)
                 {
                     Console.WriteLine("\nCouldn't add train, press 0 to go back, or any key to try again");
                     key = Console.ReadKey().KeyChar;
